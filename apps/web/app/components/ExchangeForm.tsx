@@ -3,15 +3,51 @@
 import { useState } from "react";
 import ResultsTable from "./ResultsTable";
 
+type LiveRateData = {
+  from: string;
+  to: string;
+  amount: number;
+  rate: number;
+  convertedAmount: number;
+};
+
 export default function ExchangeForm() {
   const [amount, setAmount] = useState("1000");
   const [fromCurrency, setFromCurrency] = useState("CAD");
   const [toCurrency, setToCurrency] = useState("NGN");
-  const [showResults, setShowResults] = useState(false);
+  const [rateData, setRateData] = useState<LiveRateData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setShowResults(true);
+
+    setIsLoading(true);
+    setError("");
+    setRateData(null);
+
+    try {
+      const response = await fetch(
+        `/api/exchange-rate?from=${fromCurrency}&to=${toCurrency}&amount=${amount}`
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Unable to retrieve the exchange rate.");
+      }
+
+      setRateData(data);
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while retrieving the rate.";
+
+      setError(message);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -45,10 +81,12 @@ export default function ExchangeForm() {
               <input
                 id="amount"
                 type="number"
-                min="0"
+                min="0.01"
+                step="0.01"
                 value={amount}
                 onChange={(event) => setAmount(event.target.value)}
                 className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
+                required
               />
             </div>
 
@@ -99,19 +137,25 @@ export default function ExchangeForm() {
 
           <button
             type="submit"
-            className="mt-8 w-full rounded-xl bg-blue-600 px-6 py-4 font-semibold text-white hover:bg-blue-700"
+            disabled={isLoading}
+            className="mt-8 w-full rounded-xl bg-blue-600 px-6 py-4 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
           >
-            Compare Rates
+            {isLoading ? "Loading live rate..." : "Compare Rates"}
           </button>
+
+          {error && (
+            <p className="mt-4 text-center font-medium text-red-600">{error}</p>
+          )}
         </form>
       </div>
 
-      {showResults && (
+      {rateData && (
         <div className="mx-auto mt-12 max-w-6xl">
           <ResultsTable
-            amount={Number(amount)}
-            fromCurrency={fromCurrency}
-            toCurrency={toCurrency}
+            amount={rateData.amount}
+            fromCurrency={rateData.from}
+            toCurrency={rateData.to}
+            liveRate={rateData.rate}
           />
         </div>
       )}
