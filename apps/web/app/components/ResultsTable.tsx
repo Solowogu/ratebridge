@@ -26,12 +26,36 @@ export default function ResultsTable({
   const [sortBy, setSortBy] = useState<
   "bestValue" | "lowestFee" | "highestRating"
 >("bestValue");
+  const [noFeeOnly, setNoFeeOnly] = useState(false);
+
+  const [highRatingOnly, setHighRatingOnly] = useState(false);
+
+  const [fastDeliveryOnly, setFastDeliveryOnly] = useState(false);
   const rankedProviders = providers
-    .map((provider) => {
+  .filter((provider) => {
+    if (noFeeOnly && provider.fee > 0) {
+      return false;
+    }
+
+    if (highRatingOnly && provider.rating < 4.5) {
+      return false;
+    }
+
+    if (
+      fastDeliveryOnly &&
+      !provider.deliveryTime.toLowerCase().includes("minute") &&
+      !provider.deliveryTime.toLowerCase().includes("1 day")
+    ) {
+      return false;
+    }
+
+    return true;
+  })
+  .map((provider) => {
       const rate = liveRate * provider.rateMultiplier;
       const amountAfterFee = Math.max(amount - provider.fee, 0);
       const recipientReceives = amountAfterFee * rate;
-
+      
       return {
         ...provider,
         rate,
@@ -137,44 +161,41 @@ export default function ResultsTable({
     )}
 
     <div className="mt-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-      <div className="border-b border-gray-200 px-6 py-4">
-  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-    <div>
-      <h2 className="text-xl font-semibold text-gray-900">
-        Compare Providers
-      </h2>
+      <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
+  <p className="mb-3 text-sm font-medium text-gray-700">
+    Filter providers
+  </p>
 
-      <p className="mt-1 text-sm text-gray-600">
-        Compare the estimated amount your recipient could receive.
-      </p>
-    </div>
+  <div className="flex flex-wrap gap-4">
+    <label className="flex items-center gap-2 text-sm text-gray-700">
+      <input
+        type="checkbox"
+        checked={noFeeOnly}
+        onChange={(event) => setNoFeeOnly(event.target.checked)}
+        className="h-4 w-4 rounded border-gray-300 text-blue-600"
+      />
+      No fee
+    </label>
 
-    <div>
-      <label
-        htmlFor="providerSort"
-        className="mb-1 block text-sm font-medium text-gray-700"
-      >
-        Sort by
-      </label>
+    <label className="flex items-center gap-2 text-sm text-gray-700">
+      <input
+        type="checkbox"
+        checked={highRatingOnly}
+        onChange={(event) => setHighRatingOnly(event.target.checked)}
+        className="h-4 w-4 rounded border-gray-300 text-blue-600"
+      />
+      Rating 4.5+
+    </label>
 
-      <select
-        id="providerSort"
-        value={sortBy}
-        onChange={(event) =>
-          setSortBy(
-            event.target.value as
-              | "bestValue"
-              | "lowestFee"
-              | "highestRating"
-          )
-        }
-        className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500"
-      >
-        <option value="bestValue">Best value</option>
-        <option value="lowestFee">Lowest fee</option>
-        <option value="highestRating">Highest rating</option>
-      </select>
-    </div>
+    <label className="flex items-center gap-2 text-sm text-gray-700">
+      <input
+        type="checkbox"
+        checked={fastDeliveryOnly}
+        onChange={(event) => setFastDeliveryOnly(event.target.checked)}
+        className="h-4 w-4 rounded border-gray-300 text-blue-600"
+      />
+      Fast delivery
+    </label>
   </div>
 </div>
 
