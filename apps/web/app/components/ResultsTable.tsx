@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 import { providers } from "../data/providers";
 
 type ResultsTableProps = {
@@ -19,6 +23,9 @@ export default function ResultsTable({
   toCurrency,
   liveRate,
 }: ResultsTableProps) {
+  const [sortBy, setSortBy] = useState<
+  "bestValue" | "lowestFee" | "highestRating"
+>("bestValue");
   const rankedProviders = providers
     .map((provider) => {
       const rate = liveRate * provider.rateMultiplier;
@@ -31,26 +38,145 @@ export default function ResultsTable({
         recipientReceives,
       };
     })
-    .sort(
-      (firstProvider, secondProvider) =>
+    .sort((firstProvider, secondProvider) => {
+      if (sortBy === "lowestFee") {
+        return firstProvider.fee - secondProvider.fee;
+      }
+
+      if (sortBy === "highestRating") {
+        return secondProvider.rating - firstProvider.rating;
+      }
+
+      return (
         secondProvider.recipientReceives -
         firstProvider.recipientReceives
-    );
+       );
+     });
  
-  const bestRecipientAmount =
-    rankedProviders[0]?.recipientReceives ?? 0;
+  const bestRecipientAmount = Math.max(
+  ...rankedProviders.map((provider) => provider.recipientReceives)
+  );
 
-  return (
+  const bestProvider = rankedProviders.find(
+  (provider) => provider.recipientReceives === bestRecipientAmount
+  );
+
+ return (
+  <>
+    {bestProvider && (
+      <div className="mt-8 rounded-2xl border border-green-200 bg-green-50 p-6 shadow-sm">
+        <p className="text-sm font-semibold uppercase tracking-wide text-green-700">
+          Best provider today
+        </p>
+
+        <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <div
+              className={`flex h-14 w-14 items-center justify-center rounded-full text-lg font-bold ${
+                badgeClasses[bestProvider.badgeColor]
+              }`}
+            >
+              {bestProvider.initials}
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">
+                {bestProvider.name}
+              </h2>
+
+              <p className="mt-1 text-sm text-gray-600">
+                ⭐ {bestProvider.rating.toFixed(1)} ·{" "}
+                {bestProvider.deliveryTime}
+              </p>
+            </div>
+          </div>
+
+          <a
+            href={bestProvider.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-xl bg-green-700 px-5 py-3 text-center font-semibold text-white transition hover:bg-green-800"
+          >
+            Visit {bestProvider.name}
+          </a>
+        </div>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-xl bg-white p-4">
+            <p className="text-sm text-gray-500">Recipient receives</p>
+            <p className="mt-1 text-xl font-bold text-green-700">
+              {bestProvider.recipientReceives.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}{" "}
+              {toCurrency}
+            </p>
+          </div>
+
+          <div className="rounded-xl bg-white p-4">
+            <p className="text-sm text-gray-500">Estimated fee</p>
+            <p className="mt-1 text-xl font-bold text-gray-900">
+              {bestProvider.fee === 0
+                ? "No fee"
+                : `${bestProvider.fee.toFixed(2)} ${fromCurrency}`}
+            </p>
+          </div>
+
+          <div className="rounded-xl bg-white p-4">
+            <p className="text-sm text-gray-500">Estimated rate</p>
+            <p className="mt-1 text-xl font-bold text-gray-900">
+              {bestProvider.rate.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4,
+              })}{" "}
+              {toCurrency}
+            </p>
+          </div>
+        </div>
+      </div>
+    )}
+
     <div className="mt-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       <div className="border-b border-gray-200 px-6 py-4">
-        <h2 className="text-xl font-semibold text-gray-900">
-          Compare Providers
-        </h2>
+  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 className="text-xl font-semibold text-gray-900">
+        Compare Providers
+      </h2>
 
-        <p className="mt-1 text-sm text-gray-600">
-          Compare the estimated amount your recipient could receive.
-        </p>
-      </div>
+      <p className="mt-1 text-sm text-gray-600">
+        Compare the estimated amount your recipient could receive.
+      </p>
+    </div>
+
+    <div>
+      <label
+        htmlFor="providerSort"
+        className="mb-1 block text-sm font-medium text-gray-700"
+      >
+        Sort by
+      </label>
+
+      <select
+        id="providerSort"
+        value={sortBy}
+        onChange={(event) =>
+          setSortBy(
+            event.target.value as
+              | "bestValue"
+              | "lowestFee"
+              | "highestRating"
+          )
+        }
+        className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500"
+      >
+        <option value="bestValue">Best value</option>
+        <option value="lowestFee">Lowest fee</option>
+        <option value="highestRating">Highest rating</option>
+      </select>
+    </div>
+  </div>
+</div>
 
       <p className="border-t border-gray-100 px-6 py-3 text-xs text-gray-500 md:hidden">
         Swipe horizontally to view all comparison details.
@@ -72,12 +198,14 @@ export default function ResultsTable({
           </thead>
 
           <tbody className="divide-y divide-gray-100">
-            {rankedProviders.map((provider, index) => (
+            {rankedProviders.map((provider) => (
               <tr
                 key={provider.name}
-                className={`transition hover:bg-gray-50 ${
-                  index === 0 ? "bg-green-50/60" : ""
-                }`}
+               className={`transition hover:bg-gray-50 ${
+                 provider.recipientReceives === bestRecipientAmount
+                   ? "bg-green-50/60"
+                   : ""
+               }`}
               >
                 <td className="px-6 py-5">
                   <div className="flex items-center gap-3">
@@ -94,7 +222,7 @@ export default function ResultsTable({
                         {provider.name}
                       </span>
 
-                      {index === 0 && (
+                      {provider.recipientReceives === bestRecipientAmount && (
                         <div className="mt-1">
                           <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
                             Best deal
@@ -138,11 +266,11 @@ export default function ResultsTable({
                   {toCurrency}
                 </td>
 <td className="whitespace-nowrap px-6 py-5">
-  {index === 0 ? (
-    <span className="font-semibold text-green-700">
-      Best value
-    </span>
-  ) : (
+ {provider.recipientReceives === bestRecipientAmount ? (
+  <span className="font-semibold text-green-700">
+    Best value
+  </span>
+) : (
     <span className="font-medium text-red-600">
       {(
         bestRecipientAmount - provider.recipientReceives
@@ -170,13 +298,14 @@ export default function ResultsTable({
         </table>
       </div>
 
-      <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
-        <p className="text-xs leading-5 text-gray-500">
+     <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
+       <p className="text-xs leading-5 text-gray-500">
           Provider rates, fees, ratings, and delivery times shown here are
           estimates for comparison purposes only. Confirm the final quote on the
           provider’s website before sending money.
         </p>
       </div>
     </div>
+  </>
   );
 }
