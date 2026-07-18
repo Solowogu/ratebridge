@@ -269,7 +269,10 @@ export default function ExchangeForm() {
                 toCurrency={submittedTo}
                 liveRate={liveRate}
               />              
-              <ExchangeRateChart />
+              <ExchangeRateChart
+                fromCurrency={submittedFrom}
+                toCurrency={submittedTo}
+              />
             </>
           )}
       </div>

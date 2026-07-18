@@ -10,6 +10,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+type ExchangeRateChartProps = {
+  fromCurrency: string;
+  toCurrency: string;
+};
+
 const sampleData = [
   { day: "Mon", rate: 992 },
   { day: "Tue", rate: 995 },
@@ -20,7 +25,10 @@ const sampleData = [
   { day: "Sun", rate: 999 },
 ];
 
-export default function ExchangeRateChart() {
+export default function ExchangeRateChart({
+  fromCurrency,
+  toCurrency,
+}: ExchangeRateChartProps) {
   return (
     <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       <h2 className="text-xl font-semibold text-gray-900">
@@ -28,8 +36,8 @@ export default function ExchangeRateChart() {
       </h2>
 
       <p className="mt-1 text-sm text-gray-600">
-        Sample 7-day exchange rate history.
-      </p>
+         Sample 7-day trend for {fromCurrency} → {toCurrency}.
+     </p>
 
       <div className="mt-6 h-80">
         <ResponsiveContainer width="100%" height="100%">
