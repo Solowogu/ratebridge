@@ -1,4 +1,5 @@
- import Navbar from "./components/Navbar";
+import ExchangeRateChart from "./components/ExchangeRateChart";
+import Navbar from "./components/Navbar";
 import Features from "./components/Features";
 import ExchangeForm from "./components/ExchangeForm";
 
@@ -6,7 +7,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-
+      
       <main className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
         <section className="mx-auto flex max-w-6xl flex-col items-center justify-center px-6 py-32 text-center">
           <span className="rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
@@ -39,6 +40,7 @@ export default function Home() {
 
       <Features />
       <ExchangeForm />
+      <ExchangeRateChart />
     </>
   );
 }
