@@ -1,4 +1,3 @@
-import ExchangeRateChart from "./components/ExchangeRateChart";
 import Navbar from "./components/Navbar";
 import Features from "./components/Features";
 import ExchangeForm from "./components/ExchangeForm";
@@ -40,7 +39,7 @@ export default function Home() {
 
       <Features />
       <ExchangeForm />
-      <ExchangeRateChart />
+      
     </>
   );
 }
