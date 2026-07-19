@@ -59,7 +59,12 @@ export default function ResultsTable({
     ) {
       return false;
     }
-
+if (
+  favoritesOnly &&
+  !favoriteProviders.includes(provider.name)
+) {
+  return false;
+}
     return true;
   })
   .map((provider) => {
@@ -74,6 +79,17 @@ export default function ResultsTable({
       };
     })
     .sort((firstProvider, secondProvider) => {
+      const firstIsFavorite = favoriteProviders.includes(
+  firstProvider.name
+);
+
+const secondIsFavorite = favoriteProviders.includes(
+  secondProvider.name
+);
+
+if (firstIsFavorite !== secondIsFavorite) {
+  return firstIsFavorite ? -1 : 1;
+}
       if (sortBy === "lowestFee") {
         return firstProvider.fee - secondProvider.fee;
       }
@@ -200,6 +216,17 @@ export default function ResultsTable({
             />
             Fast delivery
           </label>
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+           <input
+             type="checkbox"
+             checked={favoritesOnly}
+             onChange={(event) =>
+               setFavoritesOnly(event.target.checked)
+            }
+    className="h-4 w-4 rounded border-gray-300 text-blue-600"
+  />
+  Favorites only
+</label>
         </div>
       </div>
 
@@ -209,6 +236,8 @@ export default function ResultsTable({
           setNoFeeOnly(false);
           setHighRatingOnly(false);
           setFastDeliveryOnly(false);
+          setFavoritesOnly(false);
+          setFavoriteProviders([]);
         }}
         className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
       >
@@ -224,6 +253,9 @@ export default function ResultsTable({
         <table className="w-full min-w-[1250px] text-left">
           <thead className="bg-gray-50 text-sm text-gray-600">
             <tr>
+              <th className="px-6 py-4 font-medium text-center">
+               ★
+             </th>
               <th className="px-6 py-4 font-medium">Provider</th>
               <th className="px-6 py-4 font-medium">Rating</th>
               <th className="px-6 py-4 font-medium">Exchange rate</th>
@@ -245,6 +277,23 @@ export default function ResultsTable({
                    : ""
                }`}
               >
+                <td className="px-6 py-5 text-center">
+  <button
+    type="button"
+    onClick={() => {
+      setFavoriteProviders((current) =>
+        current.includes(provider.name)
+          ? current.filter((name) => name !== provider.name)
+          : [...current, provider.name]
+      );
+    }}
+    className="text-2xl transition hover:scale-110"
+  >
+    {favoriteProviders.includes(provider.name)
+      ? "⭐"
+      : "☆"}
+  </button>
+</td>
                 <td className="px-6 py-5">
                   <div className="flex items-center gap-3">
                     <div
@@ -320,6 +369,7 @@ export default function ResultsTable({
     </span>
   )}
 </td>
+
                 <td className="px-6 py-5">
   <div className="flex items-center gap-2">
     <button
