@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BestProviderCard from "./BestProviderCard";
 import ProviderDetailsModal from "./ProviderDetailsModal";
 import { providers } from "../data/providers";
@@ -38,6 +38,21 @@ export default function ResultsTable({
 
   const [fastDeliveryOnly, setFastDeliveryOnly] = useState(false);
   const [favoriteProviders, setFavoriteProviders] = useState<string[]>([]);
+  useEffect(() => {
+  const savedFavorites = localStorage.getItem(
+    "ratebridge-favorites"
+  );
+
+  if (savedFavorites) {
+    setFavoriteProviders(JSON.parse(savedFavorites));
+  }
+}, []);
+useEffect(() => {
+  localStorage.setItem(
+    "ratebridge-favorites",
+    JSON.stringify(favoriteProviders)
+  );
+}, [favoriteProviders]);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<
   (typeof providers)[number] | null
