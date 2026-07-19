@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-
+import BestProviderCard from "./BestProviderCard";
+import ProviderDetailsModal from "./ProviderDetailsModal";
 import { providers } from "../data/providers";
 
 type ResultsTableProps = {
@@ -15,6 +16,11 @@ const badgeClasses = {
   green: "bg-green-100 text-green-700",
   blue: "bg-blue-100 text-blue-700",
   yellow: "bg-yellow-100 text-yellow-800",
+  purple: "bg-purple-100 text-purple-700",
+  red: "bg-red-100 text-red-700",
+  orange: "bg-orange-100 text-orange-700",
+  teal: "bg-teal-100 text-teal-700",
+  pink: "bg-pink-100 text-pink-700",
 };
 
 export default function ResultsTable({
@@ -31,6 +37,11 @@ export default function ResultsTable({
   const [highRatingOnly, setHighRatingOnly] = useState(false);
 
   const [fastDeliveryOnly, setFastDeliveryOnly] = useState(false);
+  const [favoriteProviders, setFavoriteProviders] = useState<string[]>([]);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState<
+  (typeof providers)[number] | null
+>(null);
   const rankedProviders = providers
   .filter((provider) => {
     if (noFeeOnly && provider.fee > 0) {
@@ -84,121 +95,127 @@ export default function ResultsTable({
   const bestProvider = rankedProviders.find(
   (provider) => provider.recipientReceives === bestRecipientAmount
   );
-
+  const averageRecipientAmount =
+        rankedProviders.length > 0
+        ? rankedProviders.reduce(
+        (total, provider) => total + provider.recipientReceives,
+        0
+      ) / rankedProviders.length
+    : 0;
  return (
   <>
     {bestProvider && (
-      <div className="mt-8 rounded-2xl border border-green-200 bg-green-50 p-6 shadow-sm">
-        <p className="text-sm font-semibold uppercase tracking-wide text-green-700">
-          Best provider today
+  <BestProviderCard
+    providerName={bestProvider.name}
+    rating={bestProvider.rating}
+    fee={bestProvider.fee}
+    deliveryTime={bestProvider.deliveryTime}
+    recipientReceives={bestProvider.recipientReceives}
+    averageReceives={averageRecipientAmount}
+    currency={toCurrency}
+    fromCurrency={fromCurrency}
+  />
+ )}
+            
+  <div className="mt-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+  <div className="border-b border-gray-200 px-6 py-4">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h2 className="text-xl font-semibold text-gray-900">
+          Compare Providers
+        </h2>
+
+        <p className="mt-1 text-sm text-gray-600">
+          Compare the estimated amount your recipient could receive.
+        </p>
+      </div>
+
+      <div>
+        <label
+          htmlFor="providerSort"
+          className="mb-1 block text-sm font-medium text-gray-700"
+        >
+          Sort by
+        </label>
+
+        <select
+          id="providerSort"
+          value={sortBy}
+          onChange={(event) =>
+            setSortBy(
+              event.target.value as
+                | "bestValue"
+                | "lowestFee"
+                | "highestRating"
+            )
+          }
+          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500"
+        >
+          <option value="bestValue">Best value</option>
+          <option value="lowestFee">Lowest fee</option>
+          <option value="highestRating">Highest rating</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p className="text-sm font-medium text-gray-700">
+          Filter providers
         </p>
 
-        <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <div
-              className={`flex h-14 w-14 items-center justify-center rounded-full text-lg font-bold ${
-                badgeClasses[bestProvider.badgeColor]
-              }`}
-            >
-              {bestProvider.initials}
-            </div>
+        <div className="mt-3 flex flex-wrap items-center gap-4">
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              checked={noFeeOnly}
+              onChange={(event) => setNoFeeOnly(event.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-blue-600"
+            />
+            No fee
+          </label>
 
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                {bestProvider.name}
-              </h2>
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              checked={highRatingOnly}
+              onChange={(event) =>
+                setHighRatingOnly(event.target.checked)
+              }
+              className="h-4 w-4 rounded border-gray-300 text-blue-600"
+            />
+            Rating 4.5+
+          </label>
 
-              <p className="mt-1 text-sm text-gray-600">
-                ⭐ {bestProvider.rating.toFixed(1)} ·{" "}
-                {bestProvider.deliveryTime}
-              </p>
-            </div>
-          </div>
-
-          <a
-            href={bestProvider.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-xl bg-green-700 px-5 py-3 text-center font-semibold text-white transition hover:bg-green-800"
-          >
-            Visit {bestProvider.name}
-          </a>
-        </div>
-
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-xl bg-white p-4">
-            <p className="text-sm text-gray-500">Recipient receives</p>
-            <p className="mt-1 text-xl font-bold text-green-700">
-              {bestProvider.recipientReceives.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}{" "}
-              {toCurrency}
-            </p>
-          </div>
-
-          <div className="rounded-xl bg-white p-4">
-            <p className="text-sm text-gray-500">Estimated fee</p>
-            <p className="mt-1 text-xl font-bold text-gray-900">
-              {bestProvider.fee === 0
-                ? "No fee"
-                : `${bestProvider.fee.toFixed(2)} ${fromCurrency}`}
-            </p>
-          </div>
-
-          <div className="rounded-xl bg-white p-4">
-            <p className="text-sm text-gray-500">Estimated rate</p>
-            <p className="mt-1 text-xl font-bold text-gray-900">
-              {bestProvider.rate.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 4,
-              })}{" "}
-              {toCurrency}
-            </p>
-          </div>
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              checked={fastDeliveryOnly}
+              onChange={(event) =>
+                setFastDeliveryOnly(event.target.checked)
+              }
+              className="h-4 w-4 rounded border-gray-300 text-blue-600"
+            />
+            Fast delivery
+          </label>
         </div>
       </div>
-    )}
 
-    <div className="mt-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-      <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
-  <p className="mb-3 text-sm font-medium text-gray-700">
-    Filter providers
-  </p>
-
-  <div className="flex flex-wrap gap-4">
-    <label className="flex items-center gap-2 text-sm text-gray-700">
-      <input
-        type="checkbox"
-        checked={noFeeOnly}
-        onChange={(event) => setNoFeeOnly(event.target.checked)}
-        className="h-4 w-4 rounded border-gray-300 text-blue-600"
-      />
-      No fee
-    </label>
-
-    <label className="flex items-center gap-2 text-sm text-gray-700">
-      <input
-        type="checkbox"
-        checked={highRatingOnly}
-        onChange={(event) => setHighRatingOnly(event.target.checked)}
-        className="h-4 w-4 rounded border-gray-300 text-blue-600"
-      />
-      Rating 4.5+
-    </label>
-
-    <label className="flex items-center gap-2 text-sm text-gray-700">
-      <input
-        type="checkbox"
-        checked={fastDeliveryOnly}
-        onChange={(event) => setFastDeliveryOnly(event.target.checked)}
-        className="h-4 w-4 rounded border-gray-300 text-blue-600"
-      />
-      Fast delivery
-    </label>
+      <button
+        type="button"
+        onClick={() => {
+          setNoFeeOnly(false);
+          setHighRatingOnly(false);
+          setFastDeliveryOnly(false);
+        }}
+        className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
+      >
+        Reset filters
+      </button>
+    </div>
   </div>
-</div>
-
       <p className="border-t border-gray-100 px-6 py-3 text-xs text-gray-500 md:hidden">
         Swipe horizontally to view all comparison details.
       </p>
@@ -304,15 +321,25 @@ export default function ResultsTable({
   )}
 </td>
                 <td className="px-6 py-5">
-                  <a
-                    href={provider.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-                  >
-                    Visit provider
-                  </a>
-                </td>
+  <div className="flex items-center gap-2">
+    <button
+      type="button"
+      onClick={() => setSelectedProvider(provider)}
+      className="inline-flex whitespace-nowrap rounded-lg border border-blue-600 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
+    >
+      Details
+    </button>
+
+    <a
+      href={provider.website}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+    >
+      Visit
+    </a>
+  </div>
+</td>
               </tr>
             ))}
           </tbody>
@@ -327,6 +354,10 @@ export default function ResultsTable({
         </p>
       </div>
     </div>
+    <ProviderDetailsModal
+     provider={selectedProvider}
+     onClose={() => setSelectedProvider(null)}
+  />
   </>
   );
 }
