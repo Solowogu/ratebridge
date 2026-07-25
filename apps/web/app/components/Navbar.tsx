@@ -12,21 +12,42 @@ export default function Navbar() {
         </Link>
 
         <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
-          <Link
-            href="/history"
-            className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 sm:px-4 sm:text-base"
-          >
-            History
-          </Link>
+  <Link
+    href="/"
+    className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 sm:px-4 sm:text-base"
+  >
+    Home
+  </Link>
 
-          <button className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 sm:px-4 sm:text-base">
-            Login
-          </button>
+  <Link
+    href="/history"
+    className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 sm:px-4 sm:text-base"
+  >
+    History
+  </Link>
 
-          <button className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 sm:px-4 sm:text-base">
-            Sign Up
-          </button>
-        </div>
+  <Link
+    href="/alerts"
+    className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 sm:px-4 sm:text-base"
+  >
+    Alerts
+  </Link>
+
+  <Link
+    href="/about"
+    className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 sm:px-4 sm:text-base"
+  >
+    About
+  </Link>
+
+  <button className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 sm:px-4 sm:text-base">
+    Login
+  </button>
+
+  <button className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 sm:px-4 sm:text-base">
+    Sign Up
+  </button>
+</div>
       </div>
     </nav>
   );

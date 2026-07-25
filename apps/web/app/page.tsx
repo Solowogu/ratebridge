@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import Dashboard from "./components/Dashboard";
 import Features from "./components/Features";
 import ExchangeForm from "./components/ExchangeForm";
 
@@ -35,9 +36,12 @@ export default function Home() {
             </button>
           </div>
         </section>
-      </main>
+            </main>
+
+      <Dashboard />
 
       <Features />
+
       <ExchangeForm />
       
     </>
