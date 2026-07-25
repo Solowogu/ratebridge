@@ -106,3 +106,72 @@ export async function DELETE(
     );
   }
 }
+
+export async function PUT(
+  request: NextRequest,
+  context: RouteContext
+) {
+  try {
+    const { id } = await context.params;
+
+    const {
+      email,
+      targetRate,
+    } = await request.json();
+
+    const numericTargetRate = Number(targetRate);
+
+if (
+  !email?.trim() ||
+  !Number.isFinite(numericTargetRate) ||
+  numericTargetRate <= 0
+) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "A valid email and target rate are required.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const updatedAlerts = await sql`
+      UPDATE rate_alerts
+      SET
+        email = ${email.trim()},
+        target_rate = ${numericTargetRate}
+      WHERE id = ${id}
+      RETURNING id;
+    `;
+
+    if (updatedAlerts.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Alert not found.",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Unable to update alert.",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
