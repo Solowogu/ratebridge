@@ -63,3 +63,46 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  context: RouteContext
+) {
+  try {
+    const { id } = await context.params;
+
+    const deletedAlerts = await sql`
+      DELETE FROM rate_alerts
+      WHERE id = ${id}
+      RETURNING id;
+    `;
+
+    if (deletedAlerts.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Alert not found.",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+    });
+  } catch (error) {
+    console.error("Unable to delete rate alert:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Unable to delete alert.",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}

@@ -1,6 +1,7 @@
-import AlertStatusButton from "./AlertStatusButton";
 import Link from "next/link";
 import { sql } from "../lib/db";
+import AlertStatusButton from "./AlertStatusButton";
+import DeleteAlertButton from "./DeleteAlertButton";
 
 type RateAlert = {
   id: string;
@@ -94,11 +95,17 @@ export default async function AlertsPage() {
                       )}
                     </td>
                     <td className="px-5 py-4">
-                      <AlertStatusButton
-                        alertId={alert.id}
-                        isActive={alert.is_active}
-                      />
-                    </td>
+  <div className="flex gap-2">
+    <AlertStatusButton
+      alertId={alert.id}
+      isActive={alert.is_active}
+    />
+
+    <DeleteAlertButton
+      alertId={alert.id}
+    />
+  </div>
+</td>
                   </tr>
                 ))}
               </tbody>
