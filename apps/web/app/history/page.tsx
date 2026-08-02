@@ -1,3 +1,5 @@
+import { auth } from "../../auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { sql } from "../lib/db";
 
@@ -15,6 +17,12 @@ type Comparison = {
 };
 
 export default async function HistoryPage() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
+
   const comparisons = (await sql`
     SELECT
       id,
@@ -26,6 +34,7 @@ export default async function HistoryPage() {
       best_recipient_amount,
       created_at
     FROM comparisons
+    WHERE user_id = ${session.user.id}
     ORDER BY created_at DESC
     LIMIT 50
   `) as Comparison[];

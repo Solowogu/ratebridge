@@ -21,7 +21,6 @@ export default function RateAlertForm({
   const [targetRate, setTargetRate] = useState(
     currentRate.toFixed(4)
   );
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,11 +39,6 @@ export default function RateAlertForm({
       return;
     }
 
-    if (!email.trim()) {
-      setMessage("Please enter your email address.");
-      return;
-    }
-
     setIsSubmitting(true);
     setMessage("");
 
@@ -55,7 +49,6 @@ export default function RateAlertForm({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email.trim(),
           fromCurrency,
           toCurrency,
           targetRate: numericTargetRate,
@@ -66,11 +59,12 @@ export default function RateAlertForm({
       const data: RateAlertResponse = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Unable to create alert.");
+        throw new Error(
+          data.error || "Unable to create alert."
+        );
       }
 
       setMessage("✅ Rate alert created successfully!");
-      setEmail("");
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -100,11 +94,16 @@ export default function RateAlertForm({
           })}{" "}
           {toCurrency}
         </p>
+
+        <p className="mt-2 text-sm text-gray-600">
+          The alert will be sent to the email address connected to your
+          RateBridge account.
+        </p>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="mt-6 grid gap-4 md:grid-cols-2"
+        className="mt-6 space-y-4"
       >
         <div>
           <label
@@ -129,34 +128,14 @@ export default function RateAlertForm({
           />
         </div>
 
-        <div>
-          <label
-            htmlFor="alertEmail"
-            className="mb-2 block text-sm font-medium text-gray-700"
-          >
-            Email address
-          </label>
-
-          <input
-            id="alertEmail"
-            type="email"
-            value={email}
-            onChange={(event) => {
-              setEmail(event.target.value);
-              setMessage("");
-            }}
-            placeholder="you@example.com"
-            className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 outline-none focus:border-blue-500"
-            required
-          />
-        </div>
-
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300 md:col-span-2"
+          className="w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
         >
-          {isSubmitting ? "Creating alert..." : "Create Rate Alert"}
+          {isSubmitting
+            ? "Creating alert..."
+            : "Create Rate Alert"}
         </button>
       </form>
 

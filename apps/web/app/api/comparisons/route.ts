@@ -1,3 +1,4 @@
+import { auth } from "../../../auth"; 
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "../../lib/db";
 
@@ -12,6 +13,18 @@ type ComparisonRequest = {
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
+
+if (!session?.user?.id) {
+  return NextResponse.json(
+    {
+      success: false,
+      error: "You must be logged in to save comparison history.",
+    },
+    { status: 401 }
+  );
+}
+
     const body: ComparisonRequest = await request.json();
 
     const {
@@ -44,23 +57,26 @@ export async function POST(request: NextRequest) {
 
     const result = await sql`
       INSERT INTO comparisons (
-        amount,
-        from_currency,
-        to_currency,
-        reference_rate,
-        best_provider,
-        best_recipient_amount
-      )
-      VALUES (
-        ${amount},
-        ${fromCurrency.toUpperCase()},
-        ${toCurrency.toUpperCase()},
-        ${referenceRate},
-        ${bestProvider},
-        ${bestRecipientAmount}
-      )
+  user_id,
+  amount,
+  from_currency,
+  to_currency,
+  reference_rate,
+  best_provider,
+  best_recipient_amount
+)
+VALUES (
+  ${session.user.id},
+  ${amount},
+  ${fromCurrency.toUpperCase()},
+  ${toCurrency.toUpperCase()},
+  ${referenceRate},
+  ${bestProvider},
+  ${bestRecipientAmount}
+)
       RETURNING
         id,
+        user_id,
         amount,
         from_currency,
         to_currency,

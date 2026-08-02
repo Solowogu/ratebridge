@@ -1,3 +1,5 @@
+import { auth } from "../../auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { sql } from "../lib/db";
 import AlertStatusButton from "./AlertStatusButton";
@@ -16,11 +18,17 @@ type RateAlert = {
 };
 
 export default async function AlertsPage() {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/login");
+  }
   const alerts = (await sql`
-    SELECT *
-    FROM rate_alerts
-    ORDER BY created_at DESC
-  `) as RateAlert[];
+  SELECT *
+  FROM rate_alerts
+  WHERE user_id = ${session.user.id}
+  ORDER BY created_at DESC
+`) as RateAlert[];
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-12">
