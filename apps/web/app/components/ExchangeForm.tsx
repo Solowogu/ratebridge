@@ -1,4 +1,5 @@
 "use client";
+import FavoriteCurrencyPairs from "./FavoriteCurrencyPairs";
 import RateAlertForm from "./RateAlertForm";
 import RateHistoryChart from "./RateHistoryChart";
 import { FormEvent, useState } from "react";
@@ -155,10 +156,20 @@ export default function ExchangeForm() {
             Enter an amount and choose the currencies you want to compare.
           </p>
         </div>
-
+<FavoriteCurrencyPairs
+  currentFrom={fromCurrency}
+  currentTo={toCurrency}
+  onSelectPair={(selectedFrom, selectedTo) => {
+    setFromCurrency(selectedFrom);
+    setToCurrency(selectedTo);
+    setLiveRate(null);
+    setError("");
+    setSaveMessage("");
+  }}
+/>
        <form
           onSubmit={handleSubmit}
-          className="grid gap-5 md:grid-cols-[1fr_1fr_auto_1fr]"
+          className="mt-8 grid gap-5 md:grid-cols-[1fr_1fr_auto_1fr]"
       >
   <div>
             <label
