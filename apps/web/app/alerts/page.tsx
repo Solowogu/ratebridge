@@ -14,6 +14,7 @@ type RateAlert = {
   target_rate: string;
   current_rate: string;
   is_active: boolean;
+  is_triggered: boolean;
   created_at: string;
 };
 
@@ -45,10 +46,10 @@ export default async function AlertsPage() {
           </div>
 
           <Link
-            href="/"
+            href="/dashboard"
             className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700"
           >
-            Back Home
+            Back to Dashboard
           </Link>
         </div>
 
@@ -93,16 +94,20 @@ export default async function AlertsPage() {
                     </td>
 
                     <td className="px-5 py-4">
-                      {alert.is_active ? (
-                        <span className="rounded-full bg-green-100 px-3 py-1 text-green-700">
-                          Active
-                        </span>
-                      ) : (
-                        <span className="rounded-full bg-gray-200 px-3 py-1">
-                          Inactive
-                        </span>
-                      )}
-                    </td>
+  {alert.is_triggered ? (
+    <span className="rounded-full bg-blue-100 px-3 py-1 text-blue-700">
+      Triggered
+    </span>
+  ) : alert.is_active ? (
+    <span className="rounded-full bg-green-100 px-3 py-1 text-green-700">
+      Active
+    </span>
+  ) : (
+    <span className="rounded-full bg-gray-200 px-3 py-1 text-gray-700">
+      Paused
+    </span>
+  )}
+</td>
                     <td className="px-5 py-4">
   <div className="flex flex-wrap gap-2">
     <AlertStatusButton

@@ -1,3 +1,4 @@
+import CreateAlertForm from "../components/CreateAlertForm";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -142,9 +143,13 @@ export default async function DashboardPage() {
               New comparison →
             </Link>
           </div>
-        </section>
+       </section>
 
-        <section className="mt-10 rounded-2xl bg-white p-6 shadow-sm">
+<section className="mt-10">
+  <CreateAlertForm />
+</section>
+
+<section className="mt-10 rounded-2xl bg-white p-6 shadow-sm">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">

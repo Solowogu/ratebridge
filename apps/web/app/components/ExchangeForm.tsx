@@ -1,6 +1,6 @@
 "use client";
 import RateAlertForm from "./RateAlertForm";
-import ExchangeRateChart from "./ExchangeRateChart";
+import RateHistoryChart from "./RateHistoryChart";
 import { FormEvent, useState } from "react";
 import ResultsTable from "./ResultsTable";
 import { providers } from "../data/providers";
@@ -270,10 +270,10 @@ export default function ExchangeForm() {
                 toCurrency={submittedTo}
                 liveRate={liveRate}
               />              
-              <ExchangeRateChart
-                fromCurrency={submittedFrom}
-                toCurrency={submittedTo}
-              />
+              <RateHistoryChart
+  fromCurrency={submittedFrom}
+  toCurrency={submittedTo}
+/>
               <RateAlertForm
                 fromCurrency={submittedFrom}
                 toCurrency={submittedTo}
