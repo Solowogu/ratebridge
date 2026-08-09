@@ -5,6 +5,7 @@ import RateHistoryChart from "./RateHistoryChart";
 import { FormEvent, useState } from "react";
 import ResultsTable from "./ResultsTable";
 import { providers } from "../data/providers";
+import type { ProviderQuote } from "../lib/providers";
 
 type RateResponse = {
   rate?: number;
@@ -13,6 +14,7 @@ type RateResponse = {
   date?: string;
   error?: string;
 };
+
 
 type SaveComparisonResponse = {
   success: boolean;
@@ -25,6 +27,8 @@ export default function ExchangeForm() {
   const [toCurrency, setToCurrency] = useState("USD");
 
   const [liveRate, setLiveRate] = useState<number | null>(null);
+  const [providerQuotes, setProviderQuotes] =
+  useState<ProviderQuote[]>([]);
   const [submittedAmount, setSubmittedAmount] = useState<number | null>(null);
   const [submittedFrom, setSubmittedFrom] = useState("");
   const [submittedTo, setSubmittedTo] = useState("");
@@ -55,10 +59,11 @@ export default function ExchangeForm() {
     }
 
     setIsLoading(true);
-    setError("");
-    setSaveMessage("");
-    setLiveRate(null);
+setError("");
+setSaveMessage("");
+setLiveRate(null);
 
+let liveProviderQuotes: ProviderQuote[] = [];
     try {
       const response = await fetch(
         `/api/rates?from=${encodeURIComponent(
@@ -73,33 +78,75 @@ export default function ExchangeForm() {
       }
 
       setLiveRate(data.rate);
+      try {
+ const providerResponse = await fetch(
+  "/api/provider-quotes",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      fromCurrency,
+      toCurrency,
+      amount: numericAmount,
+    }),
+  }
+);
+
+const providerData = await providerResponse.json();
+
+if (
+  providerResponse.ok &&
+  providerData.success &&
+  Array.isArray(providerData.quotes)
+) {
+  liveProviderQuotes = providerData.quotes;
+  setProviderQuotes(liveProviderQuotes);
+} else {
+  liveProviderQuotes = [];
+  setProviderQuotes([]);
+}
+
+} catch {
+  liveProviderQuotes = [];
+  setProviderQuotes([]);
+}
       setSubmittedAmount(numericAmount);
       setSubmittedFrom(fromCurrency);
       setSubmittedTo(toCurrency);
       setRateDate(data.date ?? "");
 
-      const rankedProviders = providers
-        .map((provider) => {
-          const providerRate = data.rate! * provider.rateMultiplier;
-          const amountAfterFee = Math.max(
-            numericAmount - provider.fee,
-            0
-          );
-          const recipientReceives = amountAfterFee * providerRate;
+    const rankedProviders = providers
+  .map((provider) => {
+    const providerQuote = liveProviderQuotes.find(
+      (quote) => quote.provider === provider.name
+    );
 
-          return {
-            name: provider.name,
-            recipientReceives,
-          };
-        })
-        .sort(
-          (firstProvider, secondProvider) =>
-            secondProvider.recipientReceives -
-            firstProvider.recipientReceives
-        );
+    const rate =
+      providerQuote?.rate ??
+      data.rate! * provider.rateMultiplier;
 
-      const bestProvider = rankedProviders[0];
+    const fee =
+      providerQuote?.fee ??
+      provider.fee;
 
+    const recipientReceives =
+      providerQuote?.recipientReceives ??
+      Math.max(numericAmount - fee, 0) * rate;
+
+    return {
+      name: provider.name,
+      recipientReceives,
+    };
+  })
+  .sort(
+    (firstProvider, secondProvider) =>
+      secondProvider.recipientReceives -
+      firstProvider.recipientReceives
+  );
+
+const bestProvider = rankedProviders[0];
       if (bestProvider) {
         try {
           const saveResponse = await fetch("/api/comparisons", {
@@ -276,11 +323,12 @@ export default function ExchangeForm() {
               )}
 
               <ResultsTable
-                amount={submittedAmount}
-                fromCurrency={submittedFrom}
-                toCurrency={submittedTo}
-                liveRate={liveRate}
-              />              
+  amount={submittedAmount}
+  fromCurrency={submittedFrom}
+  toCurrency={submittedTo}
+  liveRate={liveRate}
+  providerQuotes={providerQuotes}
+/>
               <RateHistoryChart
   fromCurrency={submittedFrom}
   toCurrency={submittedTo}

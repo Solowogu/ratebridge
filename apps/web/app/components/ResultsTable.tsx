@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import BestProviderCard from "./BestProviderCard";
 import ProviderDetailsModal from "./ProviderDetailsModal";
+import type { ProviderQuote } from "../lib/providers";
 import { providers } from "../data/providers";
 
 type ResultsTableProps = {
@@ -10,6 +11,7 @@ type ResultsTableProps = {
   fromCurrency: string;
   toCurrency: string;
   liveRate: number;
+  wiseQuote?: WiseQuote | null;
 };
 
 const badgeClasses = {
@@ -28,6 +30,7 @@ export default function ResultsTable({
   fromCurrency,
   toCurrency,
   liveRate,
+  providerQuotes = [],
 }: ResultsTableProps) {
   const [sortBy, setSortBy] = useState<
   "bestValue" | "lowestFee" | "highestRating"
@@ -57,7 +60,38 @@ useEffect(() => {
   const [selectedProvider, setSelectedProvider] = useState<
   (typeof providers)[number] | null
 >(null);
-  const rankedProviders = providers
+ const rankedProviders = providers
+  .map((provider) => {
+    const providerQuote = providerQuotes.find(
+  (quote) => quote.provider === provider.name
+);
+
+const rate =
+  providerQuote?.rate ??
+  liveRate * provider.rateMultiplier;
+
+const fee =
+  providerQuote?.fee ??
+  provider.fee;
+
+const recipientReceives =
+  providerQuote?.recipientReceives ??
+  Math.max(amount - fee, 0) * rate;
+
+const deliveryTime =
+  providerQuote?.deliveryTime ??
+  provider.deliveryTime;
+
+return {
+  ...provider,
+  rate,
+  fee,
+  recipientReceives,
+  deliveryTime,
+  isLive: providerQuote?.isLive ?? false,
+};
+    
+  })
   .filter((provider) => {
     if (noFeeOnly && provider.fee > 0) {
       return false;
@@ -74,50 +108,42 @@ useEffect(() => {
     ) {
       return false;
     }
-if (
-  favoritesOnly &&
-  !favoriteProviders.includes(provider.name)
-) {
-  return false;
-}
+
+    if (
+      favoritesOnly &&
+      !favoriteProviders.includes(provider.name)
+    ) {
+      return false;
+    }
+
     return true;
   })
-  .map((provider) => {
-      const rate = liveRate * provider.rateMultiplier;
-      const amountAfterFee = Math.max(amount - provider.fee, 0);
-      const recipientReceives = amountAfterFee * rate;
-      
-      return {
-        ...provider,
-        rate,
-        recipientReceives,
-      };
-    })
-    .sort((firstProvider, secondProvider) => {
-      const firstIsFavorite = favoriteProviders.includes(
-  firstProvider.name
-);
+  .sort((firstProvider, secondProvider) => {
+    const firstIsFavorite = favoriteProviders.includes(
+      firstProvider.name
+    );
 
-const secondIsFavorite = favoriteProviders.includes(
-  secondProvider.name
-);
+    const secondIsFavorite = favoriteProviders.includes(
+      secondProvider.name
+    );
 
-if (firstIsFavorite !== secondIsFavorite) {
-  return firstIsFavorite ? -1 : 1;
-}
-      if (sortBy === "lowestFee") {
-        return firstProvider.fee - secondProvider.fee;
-      }
+    if (firstIsFavorite !== secondIsFavorite) {
+      return firstIsFavorite ? -1 : 1;
+    }
 
-      if (sortBy === "highestRating") {
-        return secondProvider.rating - firstProvider.rating;
-      }
+    if (sortBy === "lowestFee") {
+      return firstProvider.fee - secondProvider.fee;
+    }
 
-      return (
-        secondProvider.recipientReceives -
-        firstProvider.recipientReceives
-       );
-     });
+    if (sortBy === "highestRating") {
+      return secondProvider.rating - firstProvider.rating;
+    }
+
+    return (
+      secondProvider.recipientReceives -
+      firstProvider.recipientReceives
+    );
+  });
  
   const bestRecipientAmount = Math.max(
   ...rankedProviders.map((provider) => provider.recipientReceives)
@@ -323,6 +349,11 @@ if (firstIsFavorite !== secondIsFavorite) {
                       <span className="font-semibold text-gray-900">
                         {provider.name}
                       </span>
+                      {provider.isLive && (
+  <span className="ml-2 rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
+    Live
+  </span>
+)}
 
                       {provider.recipientReceives === bestRecipientAmount && (
                         <div className="mt-1">
