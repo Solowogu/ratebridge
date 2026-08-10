@@ -5,3 +5,4 @@ export type { ProviderQuote } from "./types";
 export { getOFXQuote } from "./ofx";
 export { getXEQuote } from "./xe";
 export { getRemitlyQuote } from "./remitly";
+export { getWorldRemitQuote } from "./worldremit";
