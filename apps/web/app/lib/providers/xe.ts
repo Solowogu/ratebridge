@@ -25,7 +25,7 @@ export async function getXEQuote(
   const fee = 2.99;
 
   return {
-    provider: "XE",
+    provider: "Xe Money Transfer",
     rate: estimatedRate,
     fee,
     recipientReceives:

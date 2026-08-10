@@ -1,7 +1,11 @@
+import { providers } from "../../data/providers";
+import { getReferenceRate } from "../exchange-rates";
+
 import { getWiseQuote } from "./wise";
 import { getOFXQuote } from "./ofx";
-import type { ProviderQuote } from "./types";
 import { getXEQuote } from "./xe";
+
+import type { ProviderQuote } from "./types";
 
 type ProviderAdapter = (
   fromCurrency: string,
@@ -26,11 +30,11 @@ export async function getProviderQuotes(
     )
   );
 
-  const quotes: ProviderQuote[] = [];
+  const adapterQuotes: ProviderQuote[] = [];
 
   for (const result of results) {
     if (result.status === "fulfilled") {
-      quotes.push(result.value);
+      adapterQuotes.push(result.value);
     } else {
       console.error(
         "Provider adapter failed:",
@@ -39,5 +43,35 @@ export async function getProviderQuotes(
     }
   }
 
-  return quotes;
+  const referenceRate = await getReferenceRate(
+    fromCurrency.toUpperCase(),
+    toCurrency.toUpperCase()
+  );
+
+  return providers.map((provider) => {
+    const adapterQuote = adapterQuotes.find(
+      (quote) => quote.provider === provider.name
+    );
+
+    if (adapterQuote) {
+      return adapterQuote;
+    }
+
+    const rate =
+      referenceRate * provider.rateMultiplier;
+
+    const fee = provider.fee;
+
+    const recipientReceives =
+      Math.max(amount - fee, 0) * rate;
+
+    return {
+      provider: provider.name,
+      rate,
+      fee,
+      recipientReceives,
+      deliveryTime: provider.deliveryTime,
+      isLive: false,
+    };
+  });
 }

@@ -322,11 +322,9 @@ const bestProvider = rankedProviders[0];
                 </p>
               )}
 
-              <ResultsTable
-  amount={submittedAmount}
+             <ResultsTable
   fromCurrency={submittedFrom}
   toCurrency={submittedTo}
-  liveRate={liveRate}
   providerQuotes={providerQuotes}
 />
               <RateHistoryChart

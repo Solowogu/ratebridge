@@ -21,32 +21,63 @@ async function fetchRate(
     ? `?providers=${encodeURIComponent(provider)}`
     : "";
 
-  const response = await fetch(
-    `https://api.frankfurter.dev/v2/rate/${from}/${to}${providerQuery}`,
-    {
-      next: {
-        revalidate: 3600,
-      },
+  const controller = new AbortController();
+
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 10000);
+
+  try {
+    console.log(`Fetching ${from} -> ${to}`);
+
+    const response = await fetch(
+      `https://api.frankfurter.dev/v2/rate/${from}/${to}${providerQuery}`,
+      {
+        next: {
+          revalidate: 3600,
+        },
+        signal: controller.signal,
+      }
+    );
+
+    console.log(`Received ${response.status}`);
+
+    if (!response.ok) {
+      throw new Error(
+        `Unable to retrieve the ${from} to ${to} rate.`
+      );
     }
-  );
 
-  if (!response.ok) {
-    throw new Error(`Unable to retrieve the ${from} to ${to} rate.`);
+    const data =
+      (await response.json()) as FrankfurterRateResponse;
+
+    if (typeof data.rate !== "number") {
+      throw new Error(
+        `No rate was found for ${from} to ${to}.`
+      );
+    }
+
+    return {
+      rate: data.rate,
+      date: data.date,
+    };
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.name === "AbortError"
+    ) {
+      throw new Error(
+        `The ${from} to ${to} rate request timed out.`
+      );
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const data: FrankfurterRateResponse = await response.json();
-
-  if (typeof data.rate !== "number") {
-    throw new Error(`No rate was found for ${from} to ${to}.`);
-  }
-
-  return {
-    rate: data.rate,
-    date: data.date,
-  };
 }
-
 export async function GET(request: NextRequest) {
+  console.log("GET /api/rates started");
   const searchParams = request.nextUrl.searchParams;
 
   const from = searchParams.get("from")?.toUpperCase();
