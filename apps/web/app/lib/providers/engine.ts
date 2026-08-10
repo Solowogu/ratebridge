@@ -6,6 +6,7 @@ import { getOFXQuote } from "./ofx";
 import { getXEQuote } from "./xe";
 import { getRemitlyQuote } from "./remitly";
 import { getWorldRemitQuote } from "./worldremit";
+import { getLemFiQuote } from "./lemfi";
 
 import type { ProviderQuote } from "./types";
 
@@ -21,6 +22,7 @@ const providerAdapters: ProviderAdapter[] = [
   getXEQuote,
   getRemitlyQuote,
   getWorldRemitQuote,
+  getLemFiQuote,
 ];
 
 export async function getProviderQuotes(
