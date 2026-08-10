@@ -10,3 +10,4 @@ export { getLemFiQuote } from "./lemfi";
 export { getCadRemitQuote } from "./cadremit";
 export { getCurrencyFairQuote } from "./currencyfair";
 export { getMoneyGramQuote } from "./moneygram";
+export { getWesternUnionQuote } from "./westernunion";

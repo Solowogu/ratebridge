@@ -10,6 +10,7 @@ import { getLemFiQuote } from "./lemfi";
 import { getCadRemitQuote } from "./cadremit";
 import { getCurrencyFairQuote } from "./currencyfair";
 import { getMoneyGramQuote } from "./moneygram";
+import { getWesternUnionQuote } from "./westernunion";
 
 import type { ProviderQuote } from "./types";
 
@@ -29,6 +30,7 @@ const providerAdapters: ProviderAdapter[] = [
   getCadRemitQuote,
   getCurrencyFairQuote,
   getMoneyGramQuote,
+  getWesternUnionQuote,
 ];
 
 export async function getProviderQuotes(
