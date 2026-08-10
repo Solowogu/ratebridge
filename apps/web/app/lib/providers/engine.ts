@@ -8,6 +8,7 @@ import { getRemitlyQuote } from "./remitly";
 import { getWorldRemitQuote } from "./worldremit";
 import { getLemFiQuote } from "./lemfi";
 import { getCadRemitQuote } from "./cadremit";
+import { getCurrencyFairQuote } from "./currencyfair";
 
 import type { ProviderQuote } from "./types";
 
@@ -25,6 +26,7 @@ const providerAdapters: ProviderAdapter[] = [
   getWorldRemitQuote,
   getLemFiQuote,
   getCadRemitQuote,
+  getCurrencyFairQuote,
 ];
 
 export async function getProviderQuotes(

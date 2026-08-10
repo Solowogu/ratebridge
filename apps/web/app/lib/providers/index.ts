@@ -8,3 +8,4 @@ export { getRemitlyQuote } from "./remitly";
 export { getWorldRemitQuote } from "./worldremit";
 export { getLemFiQuote } from "./lemfi";
 export { getCadRemitQuote } from "./cadremit";
+export { getCurrencyFairQuote } from "./currencyfair";
