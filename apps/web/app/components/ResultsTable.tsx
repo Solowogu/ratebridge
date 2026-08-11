@@ -7,11 +7,9 @@ import type { ProviderQuote } from "../lib/providers";
 import { providers } from "../data/providers";
 
 type ResultsTableProps = {
-  amount: number;
   fromCurrency: string;
   toCurrency: string;
-  liveRate: number;
-  wiseQuote?: WiseQuote | null;
+  providerQuotes: ProviderQuote[];
 };
 
 const badgeClasses = {
@@ -26,11 +24,9 @@ const badgeClasses = {
 };
 
 export default function ResultsTable({
-  amount,
   fromCurrency,
   toCurrency,
-  liveRate,
-  providerQuotes = [],
+  providerQuotes,
 }: ResultsTableProps) {
   const [sortBy, setSortBy] = useState<
   "bestValue" | "lowestFee" | "highestRating"
@@ -63,35 +59,29 @@ useEffect(() => {
  const rankedProviders = providers
   .map((provider) => {
     const providerQuote = providerQuotes.find(
-  (quote) => quote.provider === provider.name
-);
+      (quote) => quote.provider === provider.name
+    );
 
-const rate =
-  providerQuote?.rate ??
-  liveRate * provider.rateMultiplier;
+    if (!providerQuote) {
+      return null;
+    }
 
-const fee =
-  providerQuote?.fee ??
-  provider.fee;
-
-const recipientReceives =
-  providerQuote?.recipientReceives ??
-  Math.max(amount - fee, 0) * rate;
-
-const deliveryTime =
-  providerQuote?.deliveryTime ??
-  provider.deliveryTime;
-
-return {
-  ...provider,
-  rate,
-  fee,
-  recipientReceives,
-  deliveryTime,
-  isLive: providerQuote?.isLive ?? false,
-};
-    
+    return {
+      ...provider,
+      rate: providerQuote.rate,
+      fee: providerQuote.fee,
+      recipientReceives: providerQuote.recipientReceives,
+      deliveryTime: providerQuote.deliveryTime,
+      isLive: providerQuote.isLive,
+    };
   })
+  .filter(
+    (
+      provider
+    ): provider is NonNullable<typeof provider> =>
+      provider !== null
+  )
+    
   .filter((provider) => {
     if (noFeeOnly && provider.fee > 0) {
       return false;
