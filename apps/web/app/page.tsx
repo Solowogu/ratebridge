@@ -9,7 +9,11 @@ export default function Home() {
       <Navbar />
       
       <main className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
-        <section className="mx-auto flex max-w-6xl flex-col items-center justify-center px-6 py-32 text-center">
+  <p className="text-xs text-gray-500 text-center py-2">
+    Impact-Site-Verification: fcf1530d-03b8-4537-bfc1-bb3faac58790
+  </p>
+
+  <section className="mx-auto flex max-w-6xl flex-col items-center justify-center px-6 py-32 text-center">
           <span className="rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
             Trusted Exchange Rate Platform
           </span>
