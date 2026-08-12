@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "RateBridge",
   description: "Compare exchange rates and money transfer providers.",
   other: {
-    "impact-site-verification": "e6fd3e73-7399-4193-9466-c246613f8f67",
+    "impact-site-verification": "fcf1530d-03b8-4537-bfc1-bb3faac58790",
   },
 };
 
