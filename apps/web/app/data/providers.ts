@@ -16,6 +16,7 @@ export type Provider = {
   fee: number;
   deliveryTime: string;
   website: string;
+affiliateUrl?: string;
 
   supportedCountries: string;
   recommendedFor: string;
@@ -37,7 +38,7 @@ export const providers: Provider[] = [
   fee: 5.99,
   deliveryTime: "Minutes to 1 day",
   website: "https://wise.com",
-
+affiliateUrl: "",
   supportedCountries: "170+ countries",
 
   recommendedFor: "Overall value",
@@ -67,7 +68,7 @@ export const providers: Provider[] = [
   fee: 3.99,
   deliveryTime: "Minutes to 2 days",
   website: "https://www.remitly.com",
-
+affiliateUrl: "",
   supportedCountries: "170+ countries",
   recommendedFor: "Fast remittances",
   minimumTransfer: 1,
@@ -86,7 +87,7 @@ export const providers: Provider[] = [
   fee: 0,
   deliveryTime: "Minutes to 3 days",
   website: "https://www.westernunion.com",
-
+affiliateUrl: "",
   supportedCountries: "200+ countries and territories",
   recommendedFor: "Cash pickup and broad coverage",
   minimumTransfer: 1,

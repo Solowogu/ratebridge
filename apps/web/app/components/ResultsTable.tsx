@@ -348,7 +348,7 @@ useEffect(() => {
                       {provider.recipientReceives === bestRecipientAmount && (
                         <div className="mt-1">
                           <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
-                            Best deal
+                            Highest estimated value
                           </span>
                         </div>
                       )}
@@ -391,7 +391,7 @@ useEffect(() => {
 <td className="whitespace-nowrap px-6 py-5">
  {provider.recipientReceives === bestRecipientAmount ? (
   <span className="font-semibold text-green-700">
-    Best value
+    Highest estimate
   </span>
 ) : (
     <span className="font-medium text-red-600">
@@ -417,7 +417,7 @@ useEffect(() => {
     </button>
 
     <a
-      href={provider.website}
+      href={provider.affiliateUrl || provider.website}
       target="_blank"
       rel="noopener noreferrer"
       className="inline-flex whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
