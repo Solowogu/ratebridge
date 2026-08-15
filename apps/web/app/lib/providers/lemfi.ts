@@ -33,5 +33,6 @@ export async function getLemFiQuote(
       Math.max(amount - fee, 0) * estimatedRate,
     deliveryTime: "Usually within minutes",
     isLive: false,
+    quoteType: "estimated",
   };
 }

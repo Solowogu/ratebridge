@@ -73,6 +73,7 @@ useEffect(() => {
       recipientReceives: providerQuote.recipientReceives,
       deliveryTime: providerQuote.deliveryTime,
       isLive: providerQuote.isLive,
+      quoteType: providerQuote.quoteType,
     };
   })
   .filter(
@@ -339,9 +340,13 @@ useEffect(() => {
                       <span className="font-semibold text-gray-900">
                         {provider.name}
                       </span>
-                      {provider.isLive && (
+                      {provider.quoteType === "live" ? (
   <span className="ml-2 rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
     Live
+  </span>
+) : (
+  <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-600">
+    Estimated
   </span>
 )}
 

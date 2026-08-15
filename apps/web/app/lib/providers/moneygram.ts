@@ -33,5 +33,6 @@ export async function getMoneyGramQuote(
       Math.max(amount - fee, 0) * estimatedRate,
     deliveryTime: "Minutes to 2 days",
     isLive: false,
+    quoteType: "estimated",
   };
 }

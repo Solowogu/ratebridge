@@ -30,5 +30,6 @@ export async function getOFXQuote(
     recipientReceives: amount * estimatedRate,
     deliveryTime: "1 to 3 business days",
     isLive: false,
+    quoteType: "estimated",
   };
 }

@@ -33,5 +33,6 @@ export async function getCadRemitQuote(
       Math.max(amount - fee, 0) * estimatedRate,
     deliveryTime: "Instant to 2 days",
     isLive: false,
+    quoteType: "estimated",
   };
 }

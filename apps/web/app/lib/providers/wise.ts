@@ -96,5 +96,6 @@ export async function getWiseQuote(
     recipientReceives,
     deliveryTime,
     isLive: true,
+    quoteType: "live",
   };
 }

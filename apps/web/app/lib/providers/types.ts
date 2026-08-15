@@ -5,4 +5,5 @@ export type ProviderQuote = {
   recipientReceives: number;
   deliveryTime: string;
   isLive: boolean;
+  quoteType: "live" | "estimated";
 };

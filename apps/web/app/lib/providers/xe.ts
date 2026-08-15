@@ -32,5 +32,6 @@ export async function getXEQuote(
       Math.max(amount - fee, 0) * estimatedRate,
     deliveryTime: "1 to 3 business days",
     isLive: false,
+    quoteType: "estimated",
   };
 }
