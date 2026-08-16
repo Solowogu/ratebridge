@@ -8,6 +8,7 @@ type BestProviderCardProps = {
   currency: string;
   fromCurrency: string;
   quoteType: "live" | "estimated";
+  comparableProviderCount: number;
 };
 
 export default function BestProviderCard({
@@ -20,6 +21,7 @@ export default function BestProviderCard({
   currency,
   fromCurrency,
   quoteType,
+  comparableProviderCount,
 }: BestProviderCardProps) {
   const savings = recipientReceives - averageReceives;
 
@@ -91,19 +93,25 @@ export default function BestProviderCard({
 
       </div>
 
-      <div className="mt-6 rounded-xl bg-white p-4">
-        <p className="font-medium text-gray-700">
-          You receive{" "}
-          <span className="font-bold text-green-700">
-            {savings.toLocaleString(undefined,{
-              minimumFractionDigits:2,
-              maximumFractionDigits:2,
-            })}{" "}
-            {currency}
-          </span>{" "}
-          more than the average provider.
-        </p>
-      </div>
+     <div className="mt-6 rounded-xl bg-white p-4">
+  {comparableProviderCount <= 1 ? (
+    <p className="font-medium text-gray-700">
+      This is currently the only live quote available for this comparison.
+    </p>
+  ) : (
+    <p className="font-medium text-gray-700">
+      You receive{" "}
+      <span className="font-bold text-green-700">
+        {savings.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}{" "}
+        {currency}
+      </span>{" "}
+      more than the average live provider.
+    </p>
+  )}
+</div>
     </div>
   );
 }
