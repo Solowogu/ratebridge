@@ -85,9 +85,20 @@ export async function getWiseQuote(
       ? quote.targetAmount
       : Math.max(amount - fee, 0) * quote.rate;
 
-  const deliveryTime =
-    paymentOption?.estimatedDelivery ??
-    "Check Wise for delivery estimate";
+  const estimatedDelivery = paymentOption?.estimatedDelivery;
+
+let deliveryTime = "Check Wise for delivery estimate";
+
+if (estimatedDelivery) {
+  const deliveryDate = new Date(estimatedDelivery);
+
+  if (!Number.isNaN(deliveryDate.getTime())) {
+    deliveryTime = `Estimated ${deliveryDate.toLocaleDateString("en-CA", {
+      month: "short",
+      day: "numeric",
+    })}`;
+  }
+}
 
   return {
     provider: "Wise",
