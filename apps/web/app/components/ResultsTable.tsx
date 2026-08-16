@@ -183,15 +183,16 @@ const bestProvider = rankedProviders.find(
   <>
     {bestProvider && (
   <BestProviderCard
-    providerName={bestProvider.name}
-    rating={bestProvider.rating}
-    fee={bestProvider.fee}
-    deliveryTime={bestProvider.deliveryTime}
-    recipientReceives={bestProvider.recipientReceives}
-    averageReceives={averageRecipientAmount}
-    currency={toCurrency}
-    fromCurrency={fromCurrency}
-  />
+  providerName={bestProvider.name}
+  rating={bestProvider.rating}
+  fee={bestProvider.fee}
+  deliveryTime={bestProvider.deliveryTime}
+  recipientReceives={bestProvider.recipientReceives}
+  averageReceives={averageRecipientAmount}
+  currency={toCurrency}
+  fromCurrency={fromCurrency}
+  quoteType={bestProvider.quoteType}
+/>
  )}
             
   <div className="mt-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">

@@ -7,6 +7,7 @@ type BestProviderCardProps = {
   averageReceives: number;
   currency: string;
   fromCurrency: string;
+  quoteType: "live" | "estimated";
 };
 
 export default function BestProviderCard({
@@ -18,6 +19,7 @@ export default function BestProviderCard({
   averageReceives,
   currency,
   fromCurrency,
+  quoteType,
 }: BestProviderCardProps) {
   const savings = recipientReceives - averageReceives;
 
@@ -28,8 +30,10 @@ export default function BestProviderCard({
 
         <div>
           <p className="text-sm font-semibold uppercase text-green-700">
-            Best Overall
-          </p>
+  {quoteType === "live"
+    ? "Best Live Quote"
+    : "Highest Estimated Value"}
+</p>
 
           <h2 className="text-2xl font-bold text-gray-900">
             {providerName}
