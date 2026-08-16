@@ -136,13 +136,42 @@ useEffect(() => {
     );
   });
  
-  const bestRecipientAmount = Math.max(
-  ...rankedProviders.map((provider) => provider.recipientReceives)
-  );
+  const liveProviders = rankedProviders.filter(
+  (provider) => provider.quoteType === "live"
+);
 
-  const bestProvider = rankedProviders.find(
-  (provider) => provider.recipientReceives === bestRecipientAmount
-  );
+const estimatedProviders = rankedProviders.filter(
+  (provider) => provider.quoteType === "estimated"
+);
+
+const bestLiveRecipientAmount =
+  liveProviders.length > 0
+    ? Math.max(
+        ...liveProviders.map(
+          (provider) => provider.recipientReceives
+        )
+      )
+    : null;
+
+const bestEstimatedRecipientAmount =
+  estimatedProviders.length > 0
+    ? Math.max(
+        ...estimatedProviders.map(
+          (provider) => provider.recipientReceives
+        )
+      )
+    : null;
+
+const bestRecipientAmount = Math.max(
+  ...rankedProviders.map(
+    (provider) => provider.recipientReceives
+  )
+);
+
+const bestProvider = rankedProviders.find(
+  (provider) =>
+    provider.recipientReceives === bestRecipientAmount
+);
   const averageRecipientAmount =
         rankedProviders.length > 0
         ? rankedProviders.reduce(
@@ -350,13 +379,25 @@ useEffect(() => {
   </span>
 )}
 
-                      {provider.recipientReceives === bestRecipientAmount && (
-                        <div className="mt-1">
-                          <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
-                            Highest estimated value
-                          </span>
-                        </div>
-                      )}
+                      {provider.quoteType === "live" &&
+  bestLiveRecipientAmount !== null &&
+  provider.recipientReceives === bestLiveRecipientAmount && (
+    <div className="mt-1">
+      <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
+        Best live quote
+      </span>
+    </div>
+  )}
+
+{provider.quoteType === "estimated" &&
+  bestEstimatedRecipientAmount !== null &&
+  provider.recipientReceives === bestEstimatedRecipientAmount && (
+    <div className="mt-1">
+      <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
+        Highest estimated value
+      </span>
+    </div>
+  )}
                     </div>
                   </div>
                 </td>
@@ -394,21 +435,33 @@ useEffect(() => {
                   {toCurrency}
                 </td>
 <td className="whitespace-nowrap px-6 py-5">
- {provider.recipientReceives === bestRecipientAmount ? (
+ {provider.quoteType === "live" ? (
+  bestLiveRecipientAmount !== null &&
+  provider.recipientReceives === bestLiveRecipientAmount ? (
+    <span className="font-semibold text-blue-700">
+      Best live quote
+    </span>
+  ) : (
+    <span className="text-gray-500">
+      Live quote
+    </span>
+  )
+) : bestEstimatedRecipientAmount !== null &&
+  provider.recipientReceives === bestEstimatedRecipientAmount ? (
   <span className="font-semibold text-green-700">
     Highest estimate
   </span>
 ) : (
-    <span className="font-medium text-red-600">
-      {(
-        bestRecipientAmount - provider.recipientReceives
-      ).toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}{" "}
-      {toCurrency} less
-    </span>
-  )}
+  <span className="font-medium text-red-600">
+    {(
+      bestEstimatedRecipientAmount! - provider.recipientReceives
+    ).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}{" "}
+    {toCurrency} less
+  </span>
+)}
 </td>
 
                 <td className="px-6 py-5">
