@@ -26,13 +26,14 @@ export async function getWorldRemitQuote(
   const fee = 3.49;
 
   return {
-    provider: "WorldRemit",
-    rate: estimatedRate,
-    fee,
-    recipientReceives:
-      Math.max(amount - fee, 0) * estimatedRate,
-    deliveryTime: "Minutes to 2 days",
-    isLive: false,
-    quoteType: "estimated",
-  };
+  provider: "WorldRemit",
+  rate: estimatedRate,
+  fee,
+  recipientReceives:
+    Math.max(amount - fee, 0) * estimatedRate,
+  deliveryTime: "Minutes to 2 days",
+  isLive: false,
+  quoteType: "estimated",
+  updatedAt: new Date().toISOString(),
+};
 }

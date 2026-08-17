@@ -26,13 +26,14 @@ export async function getWesternUnionQuote(
   const fee = 0;
 
   return {
-    provider: "Western Union",
-    rate: estimatedRate,
-    fee,
-    recipientReceives:
-      Math.max(amount - fee, 0) * estimatedRate,
-    deliveryTime: "Minutes to 3 days",
-    isLive: false,
-    quoteType: "estimated",
-  };
+  provider: "Western Union",
+  rate: estimatedRate,
+  fee,
+  recipientReceives:
+    Math.max(amount - fee, 0) * estimatedRate,
+  deliveryTime: "Minutes to 3 days",
+  isLive: false,
+  quoteType: "estimated",
+  updatedAt: new Date().toISOString(),
+};
 }

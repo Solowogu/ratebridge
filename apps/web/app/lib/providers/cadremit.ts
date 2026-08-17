@@ -26,13 +26,14 @@ export async function getCadRemitQuote(
   const fee = 0;
 
   return {
-    provider: "CadRemit",
-    rate: estimatedRate,
-    fee,
-    recipientReceives:
-      Math.max(amount - fee, 0) * estimatedRate,
-    deliveryTime: "Instant to 2 days",
-    isLive: false,
-    quoteType: "estimated",
-  };
+  provider: "CadRemit",
+  rate: estimatedRate,
+  fee,
+  recipientReceives:
+    Math.max(amount - fee, 0) * estimatedRate,
+  deliveryTime: "Instant to 2 days",
+  isLive: false,
+  quoteType: "estimated",
+  updatedAt: new Date().toISOString(),
+};
 }

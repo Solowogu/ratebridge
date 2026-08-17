@@ -25,13 +25,14 @@ export async function getXEQuote(
   const fee = 2.99;
 
   return {
-    provider: "Xe Money Transfer",
-    rate: estimatedRate,
-    fee,
-    recipientReceives:
-      Math.max(amount - fee, 0) * estimatedRate,
-    deliveryTime: "1 to 3 business days",
-    isLive: false,
-    quoteType: "estimated",
-  };
+  provider: "Xe Money Transfer",
+  rate: estimatedRate,
+  fee,
+  recipientReceives:
+    Math.max(amount - fee, 0) * estimatedRate,
+  deliveryTime: "1 to 3 business days",
+  isLive: false,
+  quoteType: "estimated",
+  updatedAt: new Date().toISOString(),
+};
 }

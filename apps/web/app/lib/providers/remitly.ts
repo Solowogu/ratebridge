@@ -24,13 +24,14 @@ export async function getRemitlyQuote(
   const fee = 3.99;
 
   return {
-    provider: "Remitly",
-    rate: estimatedRate,
-    fee,
-    recipientReceives:
-      Math.max(amount - fee, 0) * estimatedRate,
-    deliveryTime: "Minutes to 2 days",
-    isLive: false,
-    quoteType: "estimated",
-  };
+  provider: "Remitly",
+  rate: estimatedRate,
+  fee,
+  recipientReceives:
+    Math.max(amount - fee, 0) * estimatedRate,
+  deliveryTime: "Minutes to 2 days",
+  isLive: false,
+  quoteType: "estimated",
+  updatedAt: new Date().toISOString(),
+};
 }

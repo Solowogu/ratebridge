@@ -26,13 +26,14 @@ export async function getMoneyGramQuote(
   const fee = 4.99;
 
   return {
-    provider: "MoneyGram",
-    rate: estimatedRate,
-    fee,
-    recipientReceives:
-      Math.max(amount - fee, 0) * estimatedRate,
-    deliveryTime: "Minutes to 2 days",
-    isLive: false,
-    quoteType: "estimated",
-  };
+  provider: "MoneyGram",
+  rate: estimatedRate,
+  fee,
+  recipientReceives:
+    Math.max(amount - fee, 0) * estimatedRate,
+  deliveryTime: "Minutes to 2 days",
+  isLive: false,
+  quoteType: "estimated",
+  updatedAt: new Date().toISOString(),
+};
 }

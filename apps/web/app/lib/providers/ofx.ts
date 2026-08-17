@@ -24,12 +24,13 @@ export async function getOFXQuote(
   const fee = 0;
 
   return {
-    provider: "OFX",
-    rate: estimatedRate,
-    fee,
-    recipientReceives: amount * estimatedRate,
-    deliveryTime: "1 to 3 business days",
-    isLive: false,
-    quoteType: "estimated",
-  };
+  provider: "OFX",
+  rate: estimatedRate,
+  fee,
+  recipientReceives: amount * estimatedRate,
+  deliveryTime: "1 to 3 business days",
+  isLive: false,
+  quoteType: "estimated",
+  updatedAt: new Date().toISOString(),
+};
 }

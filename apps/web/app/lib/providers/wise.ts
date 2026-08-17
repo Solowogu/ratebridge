@@ -101,12 +101,13 @@ if (estimatedDelivery) {
 }
 
   return {
-    provider: "Wise",
-    rate: quote.rate,
-    fee,
-    recipientReceives,
-    deliveryTime,
-    isLive: true,
-    quoteType: "live",
-  };
+  provider: "Wise",
+  rate: quote.rate,
+  fee,
+  recipientReceives,
+  deliveryTime,
+  isLive: true,
+  quoteType: "live",
+  updatedAt: new Date().toISOString(),
+};
 }

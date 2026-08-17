@@ -26,13 +26,14 @@ export async function getLemFiQuote(
   const fee = 0;
 
   return {
-    provider: "LemFi",
-    rate: estimatedRate,
-    fee,
-    recipientReceives:
-      Math.max(amount - fee, 0) * estimatedRate,
-    deliveryTime: "Usually within minutes",
-    isLive: false,
-    quoteType: "estimated",
-  };
+  provider: "LemFi",
+  rate: estimatedRate,
+  fee,
+  recipientReceives:
+    Math.max(amount - fee, 0) * estimatedRate,
+  deliveryTime: "Usually within minutes",
+  isLive: false,
+  quoteType: "estimated",
+  updatedAt: new Date().toISOString(),
+};
 }

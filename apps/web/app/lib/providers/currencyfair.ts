@@ -26,14 +26,14 @@ export async function getCurrencyFairQuote(
   const fee = 4;
 
   return {
-    provider: "CurrencyFair",
-    rate: estimatedRate,
-    fee,
-    recipientReceives:
-      Math.max(amount - fee, 0) * estimatedRate,
-    deliveryTime: "1 to 3 business days",
-    isLive: false,
-    quoteType: "estimated",
-
-  };
+  provider: "CurrencyFair",
+  rate: estimatedRate,
+  fee,
+  recipientReceives:
+    Math.max(amount - fee, 0) * estimatedRate,
+  deliveryTime: "1 to 3 business days",
+  isLive: false,
+  quoteType: "estimated",
+  updatedAt: new Date().toISOString(),
+};
 }

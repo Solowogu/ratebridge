@@ -70,14 +70,15 @@ export default function ResultsTable({
       }
 
       return {
-        ...provider,
-        rate: providerQuote.rate,
-        fee: providerQuote.fee,
-        recipientReceives: providerQuote.recipientReceives,
-        deliveryTime: providerQuote.deliveryTime,
-        isLive: providerQuote.isLive,
-        quoteType: providerQuote.quoteType,
-      };
+  ...provider,
+  rate: providerQuote.rate,
+  fee: providerQuote.fee,
+  recipientReceives: providerQuote.recipientReceives,
+  deliveryTime: providerQuote.deliveryTime,
+  isLive: providerQuote.isLive,
+  quoteType: providerQuote.quoteType,
+  updatedAt: providerQuote.updatedAt,
+};
     })
     .filter(
       (
@@ -219,10 +220,21 @@ export default function ResultsTable({
                 Compare Providers
               </h2>
 
-              <p className="mt-1 text-sm text-gray-600">
-                Compare the estimated amount your recipient could
-                receive.
-              </p>
+              {rankedProviders.length > 0 && (
+  <p className="mt-1 text-xs text-gray-500">
+    Last updated{" "}
+    {new Date(
+      Math.max(
+        ...rankedProviders.map((provider) =>
+          new Date(provider.updatedAt).getTime()
+        )
+      )
+    ).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}
+  </p>
+)}
             </div>
 
             <div>
