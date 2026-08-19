@@ -506,9 +506,27 @@ export default function ResultsTable({
                         )} ${fromCurrency}`}
                   </td>
 
-                  <td className="whitespace-nowrap px-6 py-5 text-gray-700">
-                    {provider.deliveryTime}
-                  </td>
+                 <td className="whitespace-nowrap px-6 py-5 text-gray-700">
+  <div>
+    <div>{provider.deliveryTime}</div>
+
+    <div className="mt-1 text-xs text-gray-500">
+  {(() => {
+    const minutesAgo = Math.max(
+      0,
+      Math.floor(
+        (Date.now() - new Date(provider.updatedAt).getTime()) /
+          60000
+      )
+    );
+
+    return minutesAgo === 0
+      ? "Just updated"
+      : `Updated ${minutesAgo} min ago`;
+  })()}
+</div>
+  </div>
+</td>
 
                   <td className="whitespace-nowrap px-6 py-5 font-bold text-green-700">
                     {provider.recipientReceives.toLocaleString(
