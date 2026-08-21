@@ -78,6 +78,7 @@ export default function ResultsTable({
   isLive: providerQuote.isLive,
   quoteType: providerQuote.quoteType,
   updatedAt: providerQuote.updatedAt,
+  source: providerQuote.source,
 };
     })
     .filter(
@@ -437,43 +438,45 @@ export default function ResultsTable({
                       </div>
 
                       <div>
-                        <span className="font-semibold text-gray-900">
-                          {provider.name}
-                        </span>
+                        <div className="flex flex-wrap items-center gap-2">
+  <span className="font-semibold text-gray-900">
+    {provider.name}
+  </span>
 
-                        {provider.quoteType === "live" ? (
-                          <span className="ml-2 rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
-                            Live
-                          </span>
-                        ) : (
-                          <span className="ml-2 rounded-full bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-600">
-                            Estimated
-                          </span>
-                        )}
+  {provider.quoteType === "live" ? (
+    <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
+      Live
+    </span>
+  ) : (
+    <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-600">
+      Estimated
+    </span>
+  )}
+</div>
 
-                        {provider.quoteType === "live" &&
-                          bestLiveRecipientAmount !== null &&
-                          provider.recipientReceives ===
-                            bestLiveRecipientAmount && (
-                            <div className="mt-1">
-                              <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
-                                Best live quote
-                              </span>
-                            </div>
-                          )}
+{provider.quoteType === "live" &&
+  bestLiveRecipientAmount !== null &&
+  provider.recipientReceives === bestLiveRecipientAmount && (
+    <div className="mt-1">
+      <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
+        Best live quote
+      </span>
+    </div>
+  )}
 
-                        {provider.quoteType ===
-                          "estimated" &&
-                          bestEstimatedRecipientAmount !==
-                            null &&
-                          provider.recipientReceives ===
-                            bestEstimatedRecipientAmount && (
-                            <div className="mt-1">
-                              <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
-                                Highest estimated value
-                              </span>
-                            </div>
-                          )}
+{provider.quoteType === "estimated" &&
+  bestEstimatedRecipientAmount !== null &&
+  provider.recipientReceives === bestEstimatedRecipientAmount && (
+    <div className="mt-1">
+      <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
+        Highest estimated value
+      </span>
+    </div>
+  )}
+
+<div className="mt-1 whitespace-nowrap text-xs text-gray-500">
+  Source: {provider.source}
+</div>
                       </div>
                     </div>
                   </td>

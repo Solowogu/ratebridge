@@ -100,7 +100,7 @@ if (estimatedDelivery) {
   }
 }
 
-  return {
+ return {
   provider: "Wise",
   rate: quote.rate,
   fee,
@@ -109,5 +109,6 @@ if (estimatedDelivery) {
   isLive: true,
   quoteType: "live",
   updatedAt: new Date().toISOString(),
+  source: "Wise API",
 };
 }

@@ -35,5 +35,6 @@ export async function getMoneyGramQuote(
   isLive: false,
   quoteType: "estimated",
   updatedAt: new Date().toISOString(),
+  source: "RateBridge estimate",
 };
 }

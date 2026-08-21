@@ -35,5 +35,6 @@ export async function getCadRemitQuote(
   isLive: false,
   quoteType: "estimated",
   updatedAt: new Date().toISOString(),
+  source: "RateBridge estimate",
 };
 }

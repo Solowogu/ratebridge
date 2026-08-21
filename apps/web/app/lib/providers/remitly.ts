@@ -33,5 +33,6 @@ export async function getRemitlyQuote(
   isLive: false,
   quoteType: "estimated",
   updatedAt: new Date().toISOString(),
+  source: "RateBridge estimate",
 };
 }

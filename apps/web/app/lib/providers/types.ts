@@ -7,4 +7,5 @@ export type ProviderQuote = {
   isLive: boolean;
   quoteType: "live" | "estimated";
   updatedAt: string;
+  source: string;
 };

@@ -34,5 +34,6 @@ export async function getXEQuote(
   isLive: false,
   quoteType: "estimated",
   updatedAt: new Date().toISOString(),
+  source: "RateBridge estimate",
 };
 }
