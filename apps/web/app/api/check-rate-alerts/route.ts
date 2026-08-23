@@ -19,8 +19,7 @@ type RateResponse = {
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET(request: NextRequest) {
-    console.log("Loaded CRON_SECRET:", process.env.CRON_SECRET);
-console.log("Authorization header:", request.headers.get("authorization"));
+   
   try {
     const authorization = request.headers.get("authorization");
 
