@@ -29,6 +29,8 @@ export default function ExchangeForm() {
   const [liveRate, setLiveRate] = useState<number | null>(null);
   const [providerQuotes, setProviderQuotes] =
   useState<ProviderQuote[]>([]);
+  const [unavailableProviders, setUnavailableProviders] =
+  useState<string[]>([]);
   const [submittedAmount, setSubmittedAmount] = useState<number | null>(null);
   const [submittedFrom, setSubmittedFrom] = useState("");
   const [submittedTo, setSubmittedTo] = useState("");
@@ -102,15 +104,22 @@ if (
   Array.isArray(providerData.quotes)
 ) {
   liveProviderQuotes = providerData.quotes;
-  setProviderQuotes(liveProviderQuotes);
+setProviderQuotes(liveProviderQuotes);
+setUnavailableProviders(
+  Array.isArray(providerData.unavailableProviders)
+    ? providerData.unavailableProviders
+    : []
+);
 } else {
   liveProviderQuotes = [];
   setProviderQuotes([]);
+  setUnavailableProviders([]);
 }
 
 } catch {
   liveProviderQuotes = [];
   setProviderQuotes([]);
+  setUnavailableProviders([]);
 }
       setSubmittedAmount(numericAmount);
       setSubmittedFrom(fromCurrency);
@@ -326,6 +335,7 @@ const bestProvider = rankedProviders[0];
   fromCurrency={submittedFrom}
   toCurrency={submittedTo}
   providerQuotes={providerQuotes}
+  unavailableProviders={unavailableProviders}
 />
               <RateHistoryChart
   fromCurrency={submittedFrom}

@@ -29,7 +29,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const quotes = await getProviderQuotes(
+            const {
+      quotes,
+      unavailableProviders,
+    } = await getProviderQuotes(
       fromCurrency,
       toCurrency,
       amount
@@ -38,6 +41,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       quotes,
+      unavailableProviders,
     });
   } catch (error) {
     console.error("Provider quote engine failed:", error);

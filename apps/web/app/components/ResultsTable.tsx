@@ -10,6 +10,7 @@ type ResultsTableProps = {
   fromCurrency: string;
   toCurrency: string;
   providerQuotes: ProviderQuote[];
+  unavailableProviders: string[];
 };
 
 const badgeClasses = {
@@ -27,6 +28,7 @@ export default function ResultsTable({
   fromCurrency,
   toCurrency,
   providerQuotes,
+  unavailableProviders,
 }: ResultsTableProps) {
   const [sortBy, setSortBy] = useState<
     "bestValue" | "lowestFee" | "highestRating"
@@ -234,6 +236,12 @@ export default function ResultsTable({
       hour: "2-digit",
       minute: "2-digit",
     })}
+  </p>
+)}
+{unavailableProviders.length > 0 && (
+  <p className="mt-2 text-sm text-amber-700">
+    Some providers are temporarily unavailable:{" "}
+    {unavailableProviders.join(", ")}.
   </p>
 )}
             </div>

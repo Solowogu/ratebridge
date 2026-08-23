@@ -11,48 +11,67 @@ import { getWesternUnionQuote } from "./westernunion";
 
 import type { ProviderQuote } from "./types";
 
-type ProviderAdapter = (
-  fromCurrency: string,
-  toCurrency: string,
-  amount: number
-) => Promise<ProviderQuote>;
-
+type ProviderAdapter = {
+  name: string;
+  getQuote: (
+    fromCurrency: string,
+    toCurrency: string,
+    amount: number
+  ) => Promise<ProviderQuote>;
+};
 const providerAdapters: ProviderAdapter[] = [
-  getWiseQuote,
-  getOFXQuote,
-  getXEQuote,
-  getRemitlyQuote,
-  getWorldRemitQuote,
-  getLemFiQuote,
-  getCadRemitQuote,
-  getCurrencyFairQuote,
-  getMoneyGramQuote,
-  getWesternUnionQuote,
+  { name: "Wise", getQuote: getWiseQuote },
+  { name: "OFX", getQuote: getOFXQuote },
+  { name: "XE", getQuote: getXEQuote },
+  { name: "Remitly", getQuote: getRemitlyQuote },
+  { name: "WorldRemit", getQuote: getWorldRemitQuote },
+  { name: "LemFi", getQuote: getLemFiQuote },
+  { name: "CadRemit", getQuote: getCadRemitQuote },
+  {
+    name: "CurrencyFair",
+    getQuote: getCurrencyFairQuote,
+  },
+  { name: "MoneyGram", getQuote: getMoneyGramQuote },
+  {
+    name: "Western Union",
+    getQuote: getWesternUnionQuote,
+  },
 ];
 
 export async function getProviderQuotes(
   fromCurrency: string,
   toCurrency: string,
   amount: number
-): Promise<ProviderQuote[]> {
+): Promise<{
+  quotes: ProviderQuote[];
+  unavailableProviders: string[];
+}> {
   const results = await Promise.allSettled(
-    providerAdapters.map((adapter) =>
-      adapter(fromCurrency, toCurrency, amount)
-    )
+   providerAdapters.map((adapter) =>
+  adapter.getQuote(fromCurrency, toCurrency, amount)
+)
   );
 
   const quotes: ProviderQuote[] = [];
+  const unavailableProviders: string[] = [];
 
-  for (const result of results) {
+  results.forEach((result, index) => {
     if (result.status === "fulfilled") {
       quotes.push(result.value);
     } else {
+      const providerName = providerAdapters[index].name;
+      unavailableProviders.push(providerName);
+
       console.error(
         "Provider adapter failed:",
+        providerName,
         result.reason
       );
     }
-  }
+  });
 
-  return quotes;
+  return {
+    quotes,
+    unavailableProviders,
+  };
 }
