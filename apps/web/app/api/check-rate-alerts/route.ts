@@ -19,7 +19,6 @@ type RateResponse = {
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET(request: NextRequest) {
-   
   try {
     const authorization = request.headers.get("authorization");
 
@@ -46,6 +45,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const appOrigin =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      "https://www.ratebridgefx.com";
+
     const alerts = (await sql`
       SELECT
         id,
@@ -66,13 +69,26 @@ export async function GET(request: NextRequest) {
     for (const alert of alerts) {
       try {
         const rateResponse = await fetch(
-          `${request.nextUrl.origin}/api/rates?from=${encodeURIComponent(
+          `${appOrigin}/api/rates?from=${encodeURIComponent(
             alert.from_currency
           )}&to=${encodeURIComponent(alert.to_currency)}`,
           {
             cache: "no-store",
           }
         );
+
+        const contentType =
+          rateResponse.headers.get("content-type") || "";
+
+        if (!contentType.includes("application/json")) {
+          const responseText = await rateResponse.text();
+
+          throw new Error(
+            `Rate API returned ${rateResponse.status} ${rateResponse.statusText} instead of JSON. Response starts with: ${responseText
+              .slice(0, 100)
+              .replace(/\s+/g, " ")}`
+          );
+        }
 
         const rateData: RateResponse = await rateResponse.json();
 
@@ -136,7 +152,7 @@ export async function GET(request: NextRequest) {
 
               <p>
                 <a
-                  href="${request.nextUrl.origin}"
+                  href="${appOrigin}"
                   style="display:inline-block;background:#2563eb;color:white;padding:12px 18px;border-radius:8px;text-decoration:none;font-weight:600;"
                 >
                   Compare rates
