@@ -46,13 +46,15 @@ export default function CreateAlertForm() {
 
     try {
       const rateResponse = await fetch(
-        `/api/exchange-rate?from=${encodeURIComponent(
-          baseCurrency
-        )}&to=${encodeURIComponent(targetCurrency)}`,
-        {
-          cache: "no-store",
-        }
-      );
+  `/api/exchange-rate?from=${encodeURIComponent(
+    baseCurrency
+  )}&to=${encodeURIComponent(
+    targetCurrency
+  )}&amount=1`,
+  {
+    cache: "no-store",
+  }
+);
 
       const rateData: RateResponse = await rateResponse.json();
 
