@@ -1,10 +1,7 @@
 "use client";
 
-import {
-  FormEvent,
-  useEffect,
-  useState,
-} from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const currencies = ["CAD", "USD", "EUR", "GBP", "NGN"];
 
@@ -19,6 +16,8 @@ type AlertResponse = {
 };
 
 export default function CreateAlertForm() {
+  const router = useRouter();
+
   const [baseCurrency, setBaseCurrency] = useState("CAD");
   const [targetCurrency, setTargetCurrency] = useState("USD");
   const [targetRate, setTargetRate] = useState("");
@@ -188,9 +187,10 @@ export default function CreateAlertForm() {
       }
 
       setMessage(
-        "Rate alert created successfully!"
-      );
-      setTargetRate("");
+  "Rate alert created successfully!"
+);
+setTargetRate("");
+router.refresh();
     } catch (error) {
       setMessage(
         error instanceof Error
