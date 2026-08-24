@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
       toCurrency,
       targetRate,
       currentRate,
+      direction,
     } = await request.json();
 
     const email = session.user.email;
@@ -41,6 +42,9 @@ export async function POST(request: NextRequest) {
 
     const normalizedFrom = String(fromCurrency).toUpperCase();
     const normalizedTo = String(toCurrency).toUpperCase();
+
+    const normalizedDirection =
+      direction === "below" ? "below" : "above";
 
     const numericTargetRate = Number(targetRate);
     const numericCurrentRate = Number(currentRate);
@@ -70,6 +74,7 @@ export async function POST(request: NextRequest) {
         AND from_currency = ${normalizedFrom}
         AND to_currency = ${normalizedTo}
         AND target_rate = ${numericTargetRate}
+        AND direction = ${normalizedDirection}
         AND is_active = TRUE
         AND is_triggered = FALSE
       LIMIT 1;
@@ -80,7 +85,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           error:
-            "You already have an active alert for this currency pair and target rate.",
+            "You already have an active alert for this currency pair, target rate, and direction.",
         },
         {
           status: 409,
@@ -95,7 +100,8 @@ export async function POST(request: NextRequest) {
         from_currency,
         to_currency,
         target_rate,
-        current_rate
+        current_rate,
+        direction
       )
       VALUES (
         ${session.user.id},
@@ -103,7 +109,8 @@ export async function POST(request: NextRequest) {
         ${normalizedFrom},
         ${normalizedTo},
         ${numericTargetRate},
-        ${numericCurrentRate}
+        ${numericCurrentRate},
+        ${normalizedDirection}
       );
     `;
 

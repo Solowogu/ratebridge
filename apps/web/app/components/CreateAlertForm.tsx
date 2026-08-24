@@ -15,11 +15,15 @@ type AlertResponse = {
   error?: string;
 };
 
+type AlertDirection = "above" | "below";
+
 export default function CreateAlertForm() {
   const router = useRouter();
 
   const [baseCurrency, setBaseCurrency] = useState("CAD");
   const [targetCurrency, setTargetCurrency] = useState("USD");
+  const [direction, setDirection] =
+    useState<AlertDirection>("above");
   const [targetRate, setTargetRate] = useState("");
 
   const [currentRate, setCurrentRate] =
@@ -169,6 +173,7 @@ export default function CreateAlertForm() {
             toCurrency: targetCurrency,
             targetRate: numericTargetRate,
             currentRate: latestRate,
+            direction,
           }),
         }
       );
@@ -187,10 +192,11 @@ export default function CreateAlertForm() {
       }
 
       setMessage(
-  "Rate alert created successfully!"
-);
-setTargetRate("");
-router.refresh();
+        "Rate alert created successfully!"
+      );
+
+      setTargetRate("");
+      router.refresh();
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -204,11 +210,16 @@ router.refresh();
 
   const numericTargetRate = Number(targetRate);
 
-  const targetIsBelowCurrent =
+  const targetAlreadyReached =
     currentRate !== null &&
     Number.isFinite(numericTargetRate) &&
     numericTargetRate > 0 &&
-    numericTargetRate <= currentRate;
+    (
+      (direction === "above" &&
+        currentRate >= numericTargetRate) ||
+      (direction === "below" &&
+        currentRate <= numericTargetRate)
+    );
 
   return (
     <form
@@ -226,7 +237,7 @@ router.refresh();
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-4">
         <div>
           <label
             htmlFor="baseCurrency"
@@ -291,6 +302,35 @@ router.refresh();
 
         <div>
           <label
+            htmlFor="direction"
+            className="mb-2 block text-sm font-medium text-gray-700"
+          >
+            Alert when
+          </label>
+
+          <select
+            id="direction"
+            value={direction}
+            onChange={(event) => {
+              setDirection(
+                event.target.value as AlertDirection
+              );
+              setMessage("");
+            }}
+            className="w-full rounded-xl border border-gray-300 px-4 py-3"
+          >
+            <option value="above">
+              Rate rises to
+            </option>
+
+            <option value="below">
+              Rate falls to
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label
             htmlFor="targetRate"
             className="mb-2 block text-sm font-medium text-gray-700"
           >
@@ -337,16 +377,16 @@ router.refresh();
             </p>
 
             <p className="mt-1 text-sm text-gray-600">
-              Set a target above the current rate if
-              you want to be notified when the rate
-              improves.
+              {direction === "above"
+                ? "You will be notified when the rate rises to or above your target."
+                : "You will be notified when the rate falls to or below your target."}
             </p>
 
-            {targetIsBelowCurrent && (
+            {targetAlreadyReached && (
               <p className="mt-2 text-sm font-semibold text-amber-700">
-                Your target is already at or below the
-                current rate, so this alert may trigger
-                on the next scheduled check.
+                Your target condition is already met,
+                so this alert may trigger on the next
+                scheduled check.
               </p>
             )}
           </>

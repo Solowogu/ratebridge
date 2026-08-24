@@ -13,6 +13,7 @@ type RateAlert = {
   to_currency: string;
   target_rate: string;
   current_rate: string;
+  direction: "above" | "below";
   is_active: boolean;
   is_triggered: boolean;
   created_at: string;
@@ -24,12 +25,23 @@ export default async function AlertsPage() {
   if (!session?.user) {
     redirect("/login");
   }
+
   const alerts = (await sql`
-  SELECT *
-  FROM rate_alerts
-  WHERE user_id = ${session.user.id}
-  ORDER BY created_at DESC
-`) as RateAlert[];
+    SELECT
+      id,
+      email,
+      from_currency,
+      to_currency,
+      target_rate,
+      current_rate,
+      direction,
+      is_active,
+      is_triggered,
+      created_at
+    FROM rate_alerts
+    WHERE user_id = ${session.user.id}
+    ORDER BY created_at DESC;
+  `) as RateAlert[];
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-12">
@@ -59,12 +71,13 @@ export default async function AlertsPage() {
           </div>
         ) : (
           <div className="overflow-x-auto rounded-2xl bg-white shadow">
-            <table className="w-full text-left">
+            <table className="w-full min-w-[1000px] text-left">
               <thead className="bg-gray-100">
                 <tr>
                   <th className="px-5 py-4">Email</th>
                   <th className="px-5 py-4">Pair</th>
                   <th className="px-5 py-4">Target</th>
+                  <th className="px-5 py-4">Alert when</th>
                   <th className="px-5 py-4">Current</th>
                   <th className="px-5 py-4">Status</th>
                   <th className="px-5 py-4">Action</th>
@@ -81,51 +94,68 @@ export default async function AlertsPage() {
                       {alert.email}
                     </td>
 
-                    <td className="px-5 py-4">
-                      {alert.from_currency} → {alert.to_currency}
+                    <td className="whitespace-nowrap px-5 py-4">
+                      {alert.from_currency} →{" "}
+                      {alert.to_currency}
                     </td>
 
                     <td className="px-5 py-4">
-                      {Number(alert.target_rate).toLocaleString()}
+                      {Number(
+                        alert.target_rate
+                      ).toLocaleString()}
+                    </td>
+
+                    <td className="whitespace-nowrap px-5 py-4">
+                      {alert.direction === "below"
+                        ? "Rate falls to"
+                        : "Rate rises to"}
                     </td>
 
                     <td className="px-5 py-4">
-                      {Number(alert.current_rate).toLocaleString()}
+                      {Number(
+                        alert.current_rate
+                      ).toLocaleString()}
                     </td>
 
                     <td className="px-5 py-4">
-  {alert.is_triggered ? (
-    <span className="rounded-full bg-blue-100 px-3 py-1 text-blue-700">
-      Triggered
-    </span>
-  ) : alert.is_active ? (
-    <span className="rounded-full bg-green-100 px-3 py-1 text-green-700">
-      Active
-    </span>
-  ) : (
-    <span className="rounded-full bg-gray-200 px-3 py-1 text-gray-700">
-      Paused
-    </span>
-  )}
-</td>
+                      {alert.is_triggered ? (
+                        <span className="rounded-full bg-blue-100 px-3 py-1 text-blue-700">
+                          Triggered
+                        </span>
+                      ) : alert.is_active ? (
+                        <span className="rounded-full bg-green-100 px-3 py-1 text-green-700">
+                          Active
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-gray-200 px-3 py-1 text-gray-700">
+                          Paused
+                        </span>
+                      )}
+                    </td>
+
                     <td className="px-5 py-4">
-  <div className="flex flex-wrap gap-2">
-    <AlertStatusButton
-      alertId={alert.id}
-      isActive={alert.is_active}
-    />
+                      <div className="flex flex-wrap gap-2">
+                        <AlertStatusButton
+                          alertId={alert.id}
+                          isActive={alert.is_active}
+                        />
 
-    <EditAlertButton
-      alertId={alert.id}
-      initialEmail={alert.email}
-      initialTargetRate={alert.target_rate}
-    />
+                        <EditAlertButton
+                          alertId={alert.id}
+                          initialEmail={alert.email}
+                          initialTargetRate={
+                            alert.target_rate
+                          }
+                          initialDirection={
+                            alert.direction
+                          }
+                        />
 
-    <DeleteAlertButton
-      alertId={alert.id}
-    />
-  </div>
-</td>
+                        <DeleteAlertButton
+                          alertId={alert.id}
+                        />
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

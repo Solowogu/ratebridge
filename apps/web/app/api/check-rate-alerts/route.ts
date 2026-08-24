@@ -3,12 +3,15 @@ import { Resend } from "resend";
 
 import { sql } from "../../lib/db";
 
+type AlertDirection = "above" | "below";
+
 type RateAlert = {
   id: string;
   email: string;
   from_currency: string;
   to_currency: string;
   target_rate: string;
+  direction: AlertDirection;
 };
 
 type RateResponse = {
@@ -55,7 +58,8 @@ export async function GET(request: NextRequest) {
         email,
         from_currency,
         to_currency,
-        target_rate
+        target_rate,
+        direction
       FROM rate_alerts
       WHERE is_active = TRUE
         AND is_triggered = FALSE
@@ -90,14 +94,16 @@ export async function GET(request: NextRequest) {
           );
         }
 
-        const rateData: RateResponse = await rateResponse.json();
+        const rateData: RateResponse =
+          await rateResponse.json();
 
         if (
           !rateResponse.ok ||
           !Number.isFinite(rateData.rate)
         ) {
           throw new Error(
-            rateData.error || "Unable to retrieve the current rate."
+            rateData.error ||
+              "Unable to retrieve the current rate."
           );
         }
 
@@ -114,19 +120,36 @@ export async function GET(request: NextRequest) {
           WHERE id = ${alert.id};
         `;
 
-        if (currentRate < targetRate) {
+        const targetReached =
+          alert.direction === "below"
+            ? currentRate <= targetRate
+            : currentRate >= targetRate;
+
+        if (!targetReached) {
           continue;
         }
+
+        const directionLabel =
+          alert.direction === "below"
+            ? "fallen to or below"
+            : "risen to or above";
+
+        const directionSubject =
+          alert.direction === "below"
+            ? "fallen to your target"
+            : "reached your target";
 
         const { error } = await resend.emails.send({
           from:
             process.env.RESEND_FROM_EMAIL ||
             "RateBridge <onboarding@resend.dev>",
           to: [alert.email],
-          subject: `Your ${alert.from_currency} → ${alert.to_currency} target rate has been reached`,
+          subject: `Your ${alert.from_currency} → ${alert.to_currency} rate has ${directionSubject}`,
           html: `
             <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">
-              <h1 style="color: #2563eb;">Target rate reached</h1>
+              <h1 style="color: #2563eb;">
+                Target rate reached
+              </h1>
 
               <p>
                 Your RateBridge alert for
@@ -135,7 +158,18 @@ export async function GET(request: NextRequest) {
               </p>
 
               <p>
-                <strong>Target rate:</strong>
+                The rate has
+                <strong>${directionLabel}</strong>
+                your target.
+              </p>
+
+              <p>
+                <strong>Alert condition:</strong>
+                ${
+                  alert.direction === "below"
+                    ? "Rate falls to"
+                    : "Rate rises to"
+                }
                 ${targetRate.toLocaleString()}
                 ${alert.to_currency}
               </p>

@@ -4,10 +4,13 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Modal from "../components/Modal";
 
+type AlertDirection = "above" | "below";
+
 type EditAlertButtonProps = {
   alertId: string;
   initialEmail: string;
   initialTargetRate: string;
+  initialDirection: AlertDirection;
 };
 
 type UpdateAlertResponse = {
@@ -19,18 +22,23 @@ export default function EditAlertButton({
   alertId,
   initialEmail,
   initialTargetRate,
+  initialDirection,
 }: EditAlertButtonProps) {
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState(initialEmail);
-  const [targetRate, setTargetRate] = useState(initialTargetRate);
+  const [targetRate, setTargetRate] =
+    useState(initialTargetRate);
+  const [direction, setDirection] =
+    useState<AlertDirection>(initialDirection);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
 
   function openModal() {
     setEmail(initialEmail);
     setTargetRate(initialTargetRate);
+    setDirection(initialDirection);
     setError("");
     setIsOpen(true);
   }
@@ -76,11 +84,13 @@ export default function EditAlertButton({
           body: JSON.stringify({
             email: email.trim(),
             targetRate: numericTargetRate,
+            direction,
           }),
         }
       );
 
-      const data: UpdateAlertResponse = await response.json();
+      const data: UpdateAlertResponse =
+        await response.json();
 
       if (!response.ok || !data.success) {
         throw new Error(
@@ -136,6 +146,35 @@ export default function EditAlertButton({
               className="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none focus:border-blue-500"
               required
             />
+          </div>
+
+          <div>
+            <label
+              htmlFor={`edit-direction-${alertId}`}
+              className="mb-2 block text-sm font-medium text-gray-700"
+            >
+              Alert when
+            </label>
+
+            <select
+              id={`edit-direction-${alertId}`}
+              value={direction}
+              onChange={(event) => {
+                setDirection(
+                  event.target.value as AlertDirection
+                );
+                setError("");
+              }}
+              className="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none focus:border-blue-500"
+            >
+              <option value="above">
+                Rate rises to
+              </option>
+
+              <option value="below">
+                Rate falls to
+              </option>
+            </select>
           </div>
 
           <div>
