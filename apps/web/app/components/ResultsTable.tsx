@@ -238,12 +238,7 @@ export default function ResultsTable({
     })}
   </p>
 )}
-{unavailableProviders.length > 0 && (
-  <p className="mt-2 text-sm text-amber-700">
-    Some providers are temporarily unavailable:{" "}
-    {unavailableProviders.join(", ")}.
-  </p>
-)}
+
             </div>
 
             <div>
@@ -339,13 +334,12 @@ export default function ResultsTable({
 
             <button
               type="button"
-              onClick={() => {
-                setNoFeeOnly(false);
-                setHighRatingOnly(false);
-                setFastDeliveryOnly(false);
-                setFavoritesOnly(false);
-                setFavoriteProviders([]);
-              }}
+             onClick={() => {
+  setNoFeeOnly(false);
+  setHighRatingOnly(false);
+  setFastDeliveryOnly(false);
+  setFavoritesOnly(false);
+}}
               className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
             >
               Reset filters
@@ -550,39 +544,47 @@ export default function ResultsTable({
                     {toCurrency}
                   </td>
 
-                  <td className="whitespace-nowrap px-6 py-5">
-                    {provider.quoteType === "live" ? (
-                      bestLiveRecipientAmount !== null &&
-                      provider.recipientReceives ===
-                        bestLiveRecipientAmount ? (
-                        <span className="font-semibold text-blue-700">
-                          Best live quote
-                        </span>
-                      ) : (
-                        <span className="text-gray-500">
-                          Live quote
-                        </span>
-                      )
-                    ) : bestEstimatedRecipientAmount !==
-                        null &&
-                      provider.recipientReceives ===
-                        bestEstimatedRecipientAmount ? (
-                      <span className="font-semibold text-green-700">
-                        Highest estimate
-                      </span>
-                    ) : (
-                      <span className="font-medium text-red-600">
-                        {(
-                          bestEstimatedRecipientAmount! -
-                          provider.recipientReceives
-                        ).toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}{" "}
-                        {toCurrency} less
-                      </span>
-                    )}
-                  </td>
+                 <td className="whitespace-nowrap px-6 py-5">
+  {provider.quoteType === "live" ? (
+    bestLiveRecipientAmount !== null &&
+    provider.recipientReceives ===
+      bestLiveRecipientAmount ? (
+      <span className="font-semibold text-blue-700">
+        Best live value
+      </span>
+    ) : (
+      <span className="text-gray-600">
+        {bestLiveRecipientAmount !== null
+          ? `${(
+              bestLiveRecipientAmount -
+              provider.recipientReceives
+            ).toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })} ${toCurrency} less`
+          : "Live quote"}
+      </span>
+    )
+  ) : bestEstimatedRecipientAmount !== null &&
+    provider.recipientReceives ===
+      bestEstimatedRecipientAmount ? (
+    <span className="font-semibold text-green-700">
+      Best estimated value
+    </span>
+  ) : (
+    <span className="font-medium text-red-600">
+      You get{" "}
+      {(
+        bestEstimatedRecipientAmount! -
+        provider.recipientReceives
+      ).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}{" "}
+      {toCurrency} less
+    </span>
+  )}
+</td>
 
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-2">
