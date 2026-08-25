@@ -210,23 +210,35 @@ export default function ResultsTable({
       : 0;
 
   function trackProviderClick(providerName: string) {
-    void fetch("/api/provider-clicks", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        providerName,
-        fromCurrency,
-        toCurrency,
-      }),
-    }).catch((error) => {
+  void fetch("/api/provider-clicks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      providerName,
+      fromCurrency,
+      toCurrency,
+    }),
+    keepalive: true,
+  })
+    .then(async (response) => {
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+
+        console.error(
+          "Provider click tracking failed:",
+          data?.error || response.statusText
+        );
+      }
+    })
+    .catch((error) => {
       console.error(
         "Unable to record provider click:",
         error
       );
     });
-  }
+}
 
   return (
     <>
