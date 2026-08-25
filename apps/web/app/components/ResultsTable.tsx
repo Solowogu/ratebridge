@@ -40,9 +40,19 @@ export default function ResultsTable({
   const [favoriteProviders, setFavoriteProviders] = useState<string[]>([]);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
 
-  const [selectedProvider, setSelectedProvider] = useState<
-    (typeof providers)[number] | null
-  >(null);
+  type SelectedProvider = (typeof providers)[number] & {
+  rate: number;
+  fee: number;
+  recipientReceives: number;
+  deliveryTime: string;
+  isLive: boolean;
+  quoteType: "live" | "estimated";
+  updatedAt: string;
+  source: string;
+};
+
+const [selectedProvider, setSelectedProvider] =
+  useState<SelectedProvider | null>(null);
 
   useEffect(() => {
     const savedFavorites = localStorage.getItem(
@@ -427,62 +437,67 @@ export default function ResultsTable({
                     </button>
                   </td>
 
-                  <td className="px-6 py-5">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-                          badgeClasses[
-                            provider.badgeColor
-                          ]
-                        }`}
-                      >
-                        {provider.initials}
-                      </div>
-
-                      <div>
-                        <div className="flex flex-wrap items-center gap-2">
-  <span className="font-semibold text-gray-900">
-    {provider.name}
-  </span>
-
-  {provider.quoteType === "live" ? (
-    <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
-      Live
-    </span>
-  ) : (
-    <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-600">
-      Estimated
-    </span>
-  )}
-</div>
-
-{provider.quoteType === "live" &&
-  bestLiveRecipientAmount !== null &&
-  provider.recipientReceives === bestLiveRecipientAmount && (
-    <div className="mt-1">
-      <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
-        Best live quote
-      </span>
+                 <td className="px-6 py-5">
+  <div className="flex items-center gap-3">
+    <div
+      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+        badgeClasses[provider.badgeColor]
+      }`}
+    >
+      {provider.initials}
     </div>
-  )}
 
-{provider.quoteType === "estimated" &&
-  bestEstimatedRecipientAmount !== null &&
-  provider.recipientReceives === bestEstimatedRecipientAmount && (
-    <div className="mt-1">
-      <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
-        Highest estimated value
-      </span>
+    <div>
+      {/* Provider name + quote type */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="font-semibold text-gray-900">
+          {provider.name}
+        </span>
+
+        <span
+          className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+            provider.quoteType === "live"
+              ? "bg-blue-100 text-blue-700"
+              : "bg-gray-100 text-gray-600"
+          }`}
+        >
+          {provider.quoteType === "live"
+            ? "LIVE"
+            : "ESTIMATE"}
+        </span>
+      </div>
+
+      {/* Best live quote badge */}
+      {provider.quoteType === "live" &&
+        bestLiveRecipientAmount !== null &&
+        provider.recipientReceives ===
+          bestLiveRecipientAmount && (
+          <div className="mt-1">
+            <span className="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
+              Best live quote
+            </span>
+          </div>
+        )}
+
+      {/* Best estimated quote badge */}
+      {provider.quoteType === "estimated" &&
+        bestEstimatedRecipientAmount !== null &&
+        provider.recipientReceives ===
+          bestEstimatedRecipientAmount && (
+          <div className="mt-1">
+            <span className="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
+              Highest estimated value
+            </span>
+          </div>
+        )}
+
+      {/* Quote source */}
+      <div className="mt-1 whitespace-nowrap text-xs text-gray-500">
+        Source: {provider.source}
+      </div>
     </div>
-  )}
-
-<div className="mt-1 whitespace-nowrap text-xs text-gray-500">
-  Source: {provider.source}
-</div>
-                      </div>
-                    </div>
-                  </td>
-
+  </div>
+</td>
                   <td className="whitespace-nowrap px-6 py-5 text-gray-700">
                     <span
                       aria-label={`${provider.rating} out of 5 stars`}
