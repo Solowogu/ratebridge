@@ -136,9 +136,13 @@ export default async function AlertsPage() {
                     <td className="px-5 py-4">
                       <div className="flex flex-wrap gap-2">
                         <AlertStatusButton
-                          alertId={alert.id}
-                          isActive={alert.is_active}
-                        />
+  alertId={alert.id}
+  isActive={alert.is_active}
+  isTriggered={alert.is_triggered}
+  currentRate={Number(alert.current_rate)}
+  targetRate={Number(alert.target_rate)}
+  direction={alert.direction}
+/>
 
                         <EditAlertButton
                           alertId={alert.id}
