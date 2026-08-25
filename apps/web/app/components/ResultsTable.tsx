@@ -37,22 +37,23 @@ export default function ResultsTable({
   const [noFeeOnly, setNoFeeOnly] = useState(false);
   const [highRatingOnly, setHighRatingOnly] = useState(false);
   const [fastDeliveryOnly, setFastDeliveryOnly] = useState(false);
-  const [favoriteProviders, setFavoriteProviders] = useState<string[]>([]);
+  const [favoriteProviders, setFavoriteProviders] =
+    useState<string[]>([]);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
 
   type SelectedProvider = (typeof providers)[number] & {
-  rate: number;
-  fee: number;
-  recipientReceives: number;
-  deliveryTime: string;
-  isLive: boolean;
-  quoteType: "live" | "estimated";
-  updatedAt: string;
-  source: string;
-};
+    rate: number;
+    fee: number;
+    recipientReceives: number;
+    deliveryTime: string;
+    isLive: boolean;
+    quoteType: "live" | "estimated";
+    updatedAt: string;
+    source: string;
+  };
 
-const [selectedProvider, setSelectedProvider] =
-  useState<SelectedProvider | null>(null);
+  const [selectedProvider, setSelectedProvider] =
+    useState<SelectedProvider | null>(null);
 
   useEffect(() => {
     const savedFavorites = localStorage.getItem(
@@ -82,16 +83,16 @@ const [selectedProvider, setSelectedProvider] =
       }
 
       return {
-  ...provider,
-  rate: providerQuote.rate,
-  fee: providerQuote.fee,
-  recipientReceives: providerQuote.recipientReceives,
-  deliveryTime: providerQuote.deliveryTime,
-  isLive: providerQuote.isLive,
-  quoteType: providerQuote.quoteType,
-  updatedAt: providerQuote.updatedAt,
-  source: providerQuote.source,
-};
+        ...provider,
+        rate: providerQuote.rate,
+        fee: providerQuote.fee,
+        recipientReceives: providerQuote.recipientReceives,
+        deliveryTime: providerQuote.deliveryTime,
+        isLive: providerQuote.isLive,
+        quoteType: providerQuote.quoteType,
+        updatedAt: providerQuote.updatedAt,
+        source: providerQuote.source,
+      };
     })
     .filter(
       (
@@ -208,6 +209,25 @@ const [selectedProvider, setSelectedProvider] =
         ) / comparableProviders.length
       : 0;
 
+  function trackProviderClick(providerName: string) {
+    void fetch("/api/provider-clicks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        providerName,
+        fromCurrency,
+        toCurrency,
+      }),
+    }).catch((error) => {
+      console.error(
+        "Unable to record provider click:",
+        error
+      );
+    });
+  }
+
   return (
     <>
       {bestProvider && (
@@ -216,12 +236,16 @@ const [selectedProvider, setSelectedProvider] =
           rating={bestProvider.rating}
           fee={bestProvider.fee}
           deliveryTime={bestProvider.deliveryTime}
-          recipientReceives={bestProvider.recipientReceives}
+          recipientReceives={
+            bestProvider.recipientReceives
+          }
           averageReceives={averageRecipientAmount}
           currency={toCurrency}
           fromCurrency={fromCurrency}
           quoteType={bestProvider.quoteType}
-          comparableProviderCount={comparableProviders.length}
+          comparableProviderCount={
+            comparableProviders.length
+          }
         />
       )}
 
@@ -234,21 +258,30 @@ const [selectedProvider, setSelectedProvider] =
               </h2>
 
               {rankedProviders.length > 0 && (
-  <p className="mt-1 text-xs text-gray-500">
-    Last updated{" "}
-    {new Date(
-      Math.max(
-        ...rankedProviders.map((provider) =>
-          new Date(provider.updatedAt).getTime()
-        )
-      )
-    ).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}
-  </p>
-)}
+                <p className="mt-1 text-xs text-gray-500">
+                  Last updated{" "}
+                  {new Date(
+                    Math.max(
+                      ...rankedProviders.map(
+                        (provider) =>
+                          new Date(
+                            provider.updatedAt
+                          ).getTime()
+                      )
+                    )
+                  ).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+              )}
 
+              {unavailableProviders.length > 0 && (
+                <p className="mt-2 text-sm text-amber-700">
+                  Some providers are temporarily unavailable:{" "}
+                  {unavailableProviders.join(", ")}.
+                </p>
+              )}
             </div>
 
             <div>
@@ -272,8 +305,14 @@ const [selectedProvider, setSelectedProvider] =
                 }
                 className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500"
               >
-                <option value="bestValue">Best value</option>
-                <option value="lowestFee">Lowest fee</option>
+                <option value="bestValue">
+                  Best value
+                </option>
+
+                <option value="lowestFee">
+                  Lowest fee
+                </option>
+
                 <option value="highestRating">
                   Highest rating
                 </option>
@@ -295,7 +334,9 @@ const [selectedProvider, setSelectedProvider] =
                     type="checkbox"
                     checked={noFeeOnly}
                     onChange={(event) =>
-                      setNoFeeOnly(event.target.checked)
+                      setNoFeeOnly(
+                        event.target.checked
+                      )
                     }
                     className="h-4 w-4 rounded border-gray-300 text-blue-600"
                   />
@@ -307,7 +348,9 @@ const [selectedProvider, setSelectedProvider] =
                     type="checkbox"
                     checked={highRatingOnly}
                     onChange={(event) =>
-                      setHighRatingOnly(event.target.checked)
+                      setHighRatingOnly(
+                        event.target.checked
+                      )
                     }
                     className="h-4 w-4 rounded border-gray-300 text-blue-600"
                   />
@@ -333,7 +376,9 @@ const [selectedProvider, setSelectedProvider] =
                     type="checkbox"
                     checked={favoritesOnly}
                     onChange={(event) =>
-                      setFavoritesOnly(event.target.checked)
+                      setFavoritesOnly(
+                        event.target.checked
+                      )
                     }
                     className="h-4 w-4 rounded border-gray-300 text-blue-600"
                   />
@@ -344,12 +389,12 @@ const [selectedProvider, setSelectedProvider] =
 
             <button
               type="button"
-             onClick={() => {
-  setNoFeeOnly(false);
-  setHighRatingOnly(false);
-  setFastDeliveryOnly(false);
-  setFavoritesOnly(false);
-}}
+              onClick={() => {
+                setNoFeeOnly(false);
+                setHighRatingOnly(false);
+                setFastDeliveryOnly(false);
+                setFavoritesOnly(false);
+              }}
               className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100"
             >
               Reset filters
@@ -358,7 +403,8 @@ const [selectedProvider, setSelectedProvider] =
         </div>
 
         <p className="border-t border-gray-100 px-6 py-3 text-xs text-gray-500 md:hidden">
-          Swipe horizontally to view all comparison details.
+          Swipe horizontally to view all comparison
+          details.
         </p>
 
         <div className="overflow-x-auto">
@@ -418,13 +464,20 @@ const [selectedProvider, setSelectedProvider] =
                     <button
                       type="button"
                       onClick={() => {
-                        setFavoriteProviders((current) =>
-                          current.includes(provider.name)
-                            ? current.filter(
-                                (name) =>
-                                  name !== provider.name
-                              )
-                            : [...current, provider.name]
+                        setFavoriteProviders(
+                          (current) =>
+                            current.includes(
+                              provider.name
+                            )
+                              ? current.filter(
+                                  (name) =>
+                                    name !==
+                                    provider.name
+                                )
+                              : [
+                                  ...current,
+                                  provider.name,
+                                ]
                         );
                       }}
                       className="text-2xl transition hover:scale-110"
@@ -437,72 +490,78 @@ const [selectedProvider, setSelectedProvider] =
                     </button>
                   </td>
 
-                 <td className="px-6 py-5">
-  <div className="flex items-center gap-3">
-    <div
-      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-        badgeClasses[provider.badgeColor]
-      }`}
-    >
-      {provider.initials}
-    </div>
+                  <td className="px-6 py-5">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                          badgeClasses[
+                            provider.badgeColor
+                          ]
+                        }`}
+                      >
+                        {provider.initials}
+                      </div>
 
-    <div>
-      {/* Provider name + quote type */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="font-semibold text-gray-900">
-          {provider.name}
-        </span>
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-semibold text-gray-900">
+                            {provider.name}
+                          </span>
 
-        <span
-          className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-            provider.quoteType === "live"
-              ? "bg-blue-100 text-blue-700"
-              : "bg-gray-100 text-gray-600"
-          }`}
-        >
-          {provider.quoteType === "live"
-            ? "LIVE"
-            : "ESTIMATE"}
-        </span>
-      </div>
+                          <span
+                            className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                              provider.quoteType ===
+                              "live"
+                                ? "bg-blue-100 text-blue-700"
+                                : "bg-gray-100 text-gray-600"
+                            }`}
+                          >
+                            {provider.quoteType ===
+                            "live"
+                              ? "LIVE"
+                              : "ESTIMATE"}
+                          </span>
+                        </div>
 
-      {/* Best live quote badge */}
-      {provider.quoteType === "live" &&
-        bestLiveRecipientAmount !== null &&
-        provider.recipientReceives ===
-          bestLiveRecipientAmount && (
-          <div className="mt-1">
-            <span className="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
-              Best live quote
-            </span>
-          </div>
-        )}
+                        {provider.quoteType ===
+                          "live" &&
+                          bestLiveRecipientAmount !==
+                            null &&
+                          provider.recipientReceives ===
+                            bestLiveRecipientAmount && (
+                            <div className="mt-1">
+                              <span className="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
+                                Best live quote
+                              </span>
+                            </div>
+                          )}
 
-      {/* Best estimated quote badge */}
-      {provider.quoteType === "estimated" &&
-        bestEstimatedRecipientAmount !== null &&
-        provider.recipientReceives ===
-          bestEstimatedRecipientAmount && (
-          <div className="mt-1">
-            <span className="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
-              Highest estimated value
-            </span>
-          </div>
-        )}
+                        {provider.quoteType ===
+                          "estimated" &&
+                          bestEstimatedRecipientAmount !==
+                            null &&
+                          provider.recipientReceives ===
+                            bestEstimatedRecipientAmount && (
+                            <div className="mt-1">
+                              <span className="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
+                                Highest estimated value
+                              </span>
+                            </div>
+                          )}
 
-      {/* Quote source */}
-      <div className="mt-1 whitespace-nowrap text-xs text-gray-500">
-        Source: {provider.source}
-      </div>
-    </div>
-  </div>
-</td>
+                        <div className="mt-1 whitespace-nowrap text-xs text-gray-500">
+                          Source: {provider.source}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
                   <td className="whitespace-nowrap px-6 py-5 text-gray-700">
                     <span
                       aria-label={`${provider.rating} out of 5 stars`}
                     >
-                      ⭐ {provider.rating.toFixed(1)}
+                      ⭐{" "}
+                      {provider.rating.toFixed(1)}
                     </span>
                   </td>
 
@@ -526,27 +585,33 @@ const [selectedProvider, setSelectedProvider] =
                         )} ${fromCurrency}`}
                   </td>
 
-                 <td className="whitespace-nowrap px-6 py-5 text-gray-700">
-  <div>
-    <div>{provider.deliveryTime}</div>
+                  <td className="whitespace-nowrap px-6 py-5 text-gray-700">
+                    <div>
+                      <div>
+                        {provider.deliveryTime}
+                      </div>
 
-    <div className="mt-1 text-xs text-gray-500">
-  {(() => {
-    const minutesAgo = Math.max(
-      0,
-      Math.floor(
-        (Date.now() - new Date(provider.updatedAt).getTime()) /
-          60000
-      )
-    );
+                      <div className="mt-1 text-xs text-gray-500">
+                        {(() => {
+                          const minutesAgo =
+                            Math.max(
+                              0,
+                              Math.floor(
+                                (Date.now() -
+                                  new Date(
+                                    provider.updatedAt
+                                  ).getTime()) /
+                                  60000
+                              )
+                            );
 
-    return minutesAgo === 0
-      ? "Just updated"
-      : `Updated ${minutesAgo} min ago`;
-  })()}
-</div>
-  </div>
-</td>
+                          return minutesAgo === 0
+                            ? "Just updated"
+                            : `Updated ${minutesAgo} min ago`;
+                        })()}
+                      </div>
+                    </div>
+                  </td>
 
                   <td className="whitespace-nowrap px-6 py-5 font-bold text-green-700">
                     {provider.recipientReceives.toLocaleString(
@@ -559,47 +624,52 @@ const [selectedProvider, setSelectedProvider] =
                     {toCurrency}
                   </td>
 
-                 <td className="whitespace-nowrap px-6 py-5">
-  {provider.quoteType === "live" ? (
-    bestLiveRecipientAmount !== null &&
-    provider.recipientReceives ===
-      bestLiveRecipientAmount ? (
-      <span className="font-semibold text-blue-700">
-        Best live value
-      </span>
-    ) : (
-      <span className="text-gray-600">
-        {bestLiveRecipientAmount !== null
-          ? `${(
-              bestLiveRecipientAmount -
-              provider.recipientReceives
-            ).toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })} ${toCurrency} less`
-          : "Live quote"}
-      </span>
-    )
-  ) : bestEstimatedRecipientAmount !== null &&
-    provider.recipientReceives ===
-      bestEstimatedRecipientAmount ? (
-    <span className="font-semibold text-green-700">
-      Best estimated value
-    </span>
-  ) : (
-    <span className="font-medium text-red-600">
-      You get{" "}
-      {(
-        bestEstimatedRecipientAmount! -
-        provider.recipientReceives
-      ).toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}{" "}
-      {toCurrency} less
-    </span>
-  )}
-</td>
+                  <td className="whitespace-nowrap px-6 py-5">
+                    {provider.quoteType === "live" ? (
+                      bestLiveRecipientAmount !== null &&
+                      provider.recipientReceives ===
+                        bestLiveRecipientAmount ? (
+                        <span className="font-semibold text-blue-700">
+                          Best live value
+                        </span>
+                      ) : (
+                        <span className="text-gray-600">
+                          {bestLiveRecipientAmount !==
+                          null
+                            ? `${(
+                                bestLiveRecipientAmount -
+                                provider.recipientReceives
+                              ).toLocaleString(
+                                undefined,
+                                {
+                                  minimumFractionDigits: 2,
+                                  maximumFractionDigits: 2,
+                                }
+                              )} ${toCurrency} less`
+                            : "Live quote"}
+                        </span>
+                      )
+                    ) : bestEstimatedRecipientAmount !==
+                        null &&
+                      provider.recipientReceives ===
+                        bestEstimatedRecipientAmount ? (
+                      <span className="font-semibold text-green-700">
+                        Best estimated value
+                      </span>
+                    ) : (
+                      <span className="font-medium text-red-600">
+                        You get{" "}
+                        {(
+                          bestEstimatedRecipientAmount! -
+                          provider.recipientReceives
+                        ).toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}{" "}
+                        {toCurrency} less
+                      </span>
+                    )}
+                  </td>
 
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-2">
@@ -620,6 +690,11 @@ const [selectedProvider, setSelectedProvider] =
                         }
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() =>
+                          trackProviderClick(
+                            provider.name
+                          )
+                        }
                         className="inline-flex whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
                       >
                         Visit
@@ -637,14 +712,16 @@ const [selectedProvider, setSelectedProvider] =
             Provider rates, fees, ratings, and delivery
             times shown here are estimates for comparison
             purposes only. Confirm the final quote on the
-            provider’s website before sending money.
+            provider&apos;s website before sending money.
           </p>
         </div>
       </div>
 
       <ProviderDetailsModal
         provider={selectedProvider}
-        onClose={() => setSelectedProvider(null)}
+        onClose={() =>
+          setSelectedProvider(null)
+        }
       />
     </>
   );
