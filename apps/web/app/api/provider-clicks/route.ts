@@ -58,12 +58,54 @@ export async function POST(request: NextRequest) {
       success: true,
     });
   } catch (error) {
-    console.error("Unable to save provider click:", error);
+    console.error(
+      "Unable to save provider click:",
+      error
+    );
 
     return NextResponse.json(
       {
         success: false,
         error: "Unable to record provider click.",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
+/*
+ * TEMPORARY DIAGNOSTIC ROUTE
+ * We will remove this after testing.
+ */
+export async function GET() {
+  try {
+    const rows = await sql`
+      SELECT
+        provider_name,
+        from_currency,
+        to_currency,
+        clicked_at
+      FROM provider_clicks
+      ORDER BY clicked_at DESC
+      LIMIT 10;
+    `;
+
+    return NextResponse.json({
+      success: true,
+      rows,
+    });
+  } catch (error) {
+    console.error(
+      "Unable to read provider clicks:",
+      error
+    );
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Unable to read provider clicks.",
       },
       {
         status: 500,
