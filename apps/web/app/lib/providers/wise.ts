@@ -1,24 +1,36 @@
 import type { ProviderQuote } from "./types";
 
-type WiseQuoteRequest = {
-  sourceCurrency: string;
-  targetCurrency: string;
-  sourceAmount: number;
+type WisePaymentOption = {
+  disabled?: boolean;
+  payIn?: string;
+  payOut?: string;
+  sourceAmount?: number;
+  targetAmount?: number;
+  sourceCurrency?: string;
+  targetCurrency?: string;
+  estimatedDelivery?: string;
+  formattedEstimatedDelivery?: string;
+  fee?: {
+    total?: number;
+  };
+  price?: {
+    total?: {
+      value?: {
+        amount?: number;
+      };
+    };
+  };
 };
 
 type WiseQuoteResponse = {
   rate?: number;
   sourceAmount?: number;
   targetAmount?: number;
-  fee?: number;
-  paymentOptions?: Array<{
-    fee?: {
-      total?: number;
-    };
-    estimatedDelivery?: string;
-  }>;
+  sourceCurrency?: string;
+  targetCurrency?: string;
+  paymentOptions?: WisePaymentOption[];
+  rateTimestamp?: string;
 };
-
 
 export async function getWiseQuote(
   fromCurrency: string,
@@ -34,20 +46,24 @@ export async function getWiseQuote(
     throw new Error("Invalid Wise quote request.");
   }
 
-  const requestBody: WiseQuoteRequest = {
-    sourceCurrency: fromCurrency.toUpperCase(),
-    targetCurrency: toCurrency.toUpperCase(),
-    sourceAmount: amount,
-  };
+  const sourceCurrency =
+    fromCurrency.trim().toUpperCase();
+
+  const targetCurrency =
+    toCurrency.trim().toUpperCase();
 
   const response = await fetch(
-    "https://api.wise.com/v3/quotes",
+    "https://api.wise.com/2026Q3/quotes",
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify({
+        sourceCurrency,
+        targetCurrency,
+        sourceAmount: amount,
+      }),
       cache: "no-store",
     }
   );
@@ -61,54 +77,92 @@ export async function getWiseQuote(
       errorBody
     );
 
-    throw new Error("Unable to retrieve a Wise quote.");
+    throw new Error(
+      "Unable to retrieve a Wise quote."
+    );
   }
 
-  const quote = (await response.json()) as WiseQuoteResponse;
+  const quote =
+    (await response.json()) as WiseQuoteResponse;
 
   if (
     typeof quote.rate !== "number" ||
     !Number.isFinite(quote.rate)
   ) {
-    throw new Error("Wise returned an invalid exchange rate.");
+    throw new Error(
+      "Wise returned an invalid exchange rate."
+    );
   }
 
-  const paymentOption = quote.paymentOptions?.[0];
+  const enabledOptions =
+    quote.paymentOptions?.filter(
+      (option) => !option.disabled
+    ) ?? [];
+
+  const preferredOption =
+    enabledOptions.find(
+      (option) =>
+        option.payIn === "BANK_TRANSFER"
+    ) ??
+    enabledOptions.find(
+      (option) =>
+        option.payIn === "INTERAC"
+    ) ??
+    enabledOptions[0];
+
+  if (!preferredOption) {
+    throw new Error(
+      "Wise returned no available payment options."
+    );
+  }
 
   const fee =
-    paymentOption?.fee?.total ??
-    quote.fee ??
+    preferredOption.fee?.total ??
+    preferredOption.price?.total?.value?.amount ??
     0;
 
   const recipientReceives =
-    typeof quote.targetAmount === "number"
-      ? quote.targetAmount
+    typeof preferredOption.targetAmount === "number"
+      ? preferredOption.targetAmount
       : Math.max(amount - fee, 0) * quote.rate;
 
-  const estimatedDelivery = paymentOption?.estimatedDelivery;
+  let deliveryTime =
+    "Check Wise for delivery estimate";
 
-let deliveryTime = "Check Wise for delivery estimate";
+  if (
+    preferredOption.formattedEstimatedDelivery
+  ) {
+    deliveryTime =
+      preferredOption.formattedEstimatedDelivery;
+  } else if (
+    preferredOption.estimatedDelivery
+  ) {
+    const deliveryDate = new Date(
+      preferredOption.estimatedDelivery
+    );
 
-if (estimatedDelivery) {
-  const deliveryDate = new Date(estimatedDelivery);
-
-  if (!Number.isNaN(deliveryDate.getTime())) {
-    deliveryTime = `Estimated ${deliveryDate.toLocaleDateString("en-CA", {
-      month: "short",
-      day: "numeric",
-    })}`;
+    if (!Number.isNaN(deliveryDate.getTime())) {
+      deliveryTime = `Estimated ${deliveryDate.toLocaleDateString(
+        "en-CA",
+        {
+          month: "short",
+          day: "numeric",
+        }
+      )}`;
+    }
   }
-}
 
- return {
-  provider: "Wise",
-  rate: quote.rate,
-  fee,
-  recipientReceives,
-  deliveryTime,
-  isLive: true,
-  quoteType: "live",
-  updatedAt: new Date().toISOString(),
-  source: "Wise API",
-};
+  return {
+    provider: "Wise",
+    rate: quote.rate,
+    fee,
+    recipientReceives,
+    deliveryTime,
+    isLive: true,
+    quoteType: "live",
+    updatedAt:
+      quote.rateTimestamp ??
+      new Date().toISOString(),
+    source: "Wise display quote",
+  };
 }
