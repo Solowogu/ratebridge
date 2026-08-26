@@ -696,21 +696,17 @@ export default function ResultsTable({
                       </button>
 
                       <a
-                        href={
-                          provider.affiliateUrl ||
-                          provider.website
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() =>
-                          trackProviderClick(
-                            provider.name
-                          )
-                        }
-                        className="inline-flex whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-                      >
-                        Visit
-                      </a>
+  href={`/api/provider-visit?provider=${encodeURIComponent(
+    provider.name
+  )}&from=${encodeURIComponent(
+    fromCurrency
+  )}&to=${encodeURIComponent(toCurrency)}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+>
+  Visit
+</a>
                     </div>
                   </td>
                 </tr>
