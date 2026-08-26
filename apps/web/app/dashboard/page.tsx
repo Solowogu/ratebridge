@@ -8,6 +8,7 @@ import { sql } from "../lib/db";
 type DashboardSummary = {
   active_alerts: string;
   comparison_count: string;
+  provider_click_count: string;
 };
 
 type RecentComparison = {
@@ -18,6 +19,25 @@ type RecentComparison = {
   best_provider: string | null;
   best_recipient_amount: string | null;
   created_at: string;
+};
+
+type ProviderClickSummary = {
+  provider_name: string;
+  click_count: string;
+};
+
+type ProviderPairSummary = {
+  from_currency: string;
+  to_currency: string;
+  click_count: string;
+};
+
+type RecentProviderClick = {
+  id: string;
+  provider_name: string;
+  from_currency: string;
+  to_currency: string;
+  clicked_at: string;
 };
 
 export const dynamic = "force-dynamic";
@@ -41,7 +61,12 @@ export default async function DashboardPage() {
         SELECT COUNT(*)
         FROM comparisons
         WHERE user_id = ${session.user.id}
-      ) AS comparison_count;
+      ) AS comparison_count,
+      (
+        SELECT COUNT(*)
+        FROM provider_clicks
+        WHERE user_id = ${session.user.id}
+      ) AS provider_click_count;
   `) as DashboardSummary[];
 
   const recentComparisons = (await sql`
@@ -59,6 +84,47 @@ export default async function DashboardPage() {
     LIMIT 5;
   `) as RecentComparison[];
 
+  const topProviderResult = (await sql`
+    SELECT
+      provider_name,
+      COUNT(*) AS click_count
+    FROM provider_clicks
+    WHERE user_id = ${session.user.id}
+    GROUP BY provider_name
+    ORDER BY COUNT(*) DESC, provider_name ASC
+    LIMIT 1;
+  `) as ProviderClickSummary[];
+
+  const topPairResult = (await sql`
+    SELECT
+      from_currency,
+      to_currency,
+      COUNT(*) AS click_count
+    FROM provider_clicks
+    WHERE user_id = ${session.user.id}
+    GROUP BY
+      from_currency,
+      to_currency
+    ORDER BY
+      COUNT(*) DESC,
+      from_currency ASC,
+      to_currency ASC
+    LIMIT 1;
+  `) as ProviderPairSummary[];
+
+  const recentProviderClicks = (await sql`
+    SELECT
+      id,
+      provider_name,
+      from_currency,
+      to_currency,
+      clicked_at
+    FROM provider_clicks
+    WHERE user_id = ${session.user.id}
+    ORDER BY clicked_at DESC
+    LIMIT 5;
+  `) as RecentProviderClick[];
+
   const activeAlerts = Number(
     summaryResult[0]?.active_alerts ?? 0
   );
@@ -67,12 +133,32 @@ export default async function DashboardPage() {
     summaryResult[0]?.comparison_count ?? 0
   );
 
+  const providerClickCount = Number(
+    summaryResult[0]?.provider_click_count ?? 0
+  );
+
   const firstName =
     session.user.name?.trim().split(/\s+/)[0] ?? "User";
 
   const latestPair = recentComparisons[0]
     ? `${recentComparisons[0].from_currency} → ${recentComparisons[0].to_currency}`
     : "No comparisons yet";
+
+  const mostVisitedProvider =
+    topProviderResult[0]?.provider_name ??
+    "No provider visits yet";
+
+  const mostVisitedProviderCount = Number(
+    topProviderResult[0]?.click_count ?? 0
+  );
+
+  const mostVisitedPair = topPairResult[0]
+    ? `${topPairResult[0].from_currency} → ${topPairResult[0].to_currency}`
+    : "No provider visits yet";
+
+  const mostVisitedPairCount = Number(
+    topPairResult[0]?.click_count ?? 0
+  );
 
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-12">
@@ -87,12 +173,12 @@ export default async function DashboardPage() {
           </h1>
 
           <p className="mt-3 text-gray-600">
-            Review your alerts, comparison activity, and latest
-            currency pair.
+            Review your alerts, comparison activity,
+            provider visits, and latest currency pair.
           </p>
         </div>
 
-        <section className="grid gap-6 md:grid-cols-3">
+        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-2xl bg-white p-6 shadow-sm">
             <p className="text-sm font-medium text-gray-500">
               Active alerts
@@ -129,6 +215,20 @@ export default async function DashboardPage() {
 
           <div className="rounded-2xl bg-white p-6 shadow-sm">
             <p className="text-sm font-medium text-gray-500">
+              Provider visits
+            </p>
+
+            <p className="mt-3 text-4xl font-bold text-purple-600">
+              {providerClickCount}
+            </p>
+
+            <p className="mt-5 text-sm text-gray-500">
+              Outbound provider visits
+            </p>
+          </div>
+
+          <div className="rounded-2xl bg-white p-6 shadow-sm">
+            <p className="text-sm font-medium text-gray-500">
               Latest currency pair
             </p>
 
@@ -143,13 +243,134 @@ export default async function DashboardPage() {
               New comparison →
             </Link>
           </div>
-       </section>
+        </section>
 
-<section className="mt-10">
-  <CreateAlertForm />
-</section>
+        <section className="mt-10">
+          <CreateAlertForm />
+        </section>
 
-<section className="mt-10 rounded-2xl bg-white p-6 shadow-sm">
+        <section className="mt-10 rounded-2xl bg-white p-6 shadow-sm">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Provider visit insights
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-600">
+              Your recent outbound provider activity.
+            </p>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl bg-gray-50 p-5">
+              <p className="text-sm font-medium text-gray-500">
+                Total visits
+              </p>
+
+              <p className="mt-2 text-3xl font-bold text-gray-900">
+                {providerClickCount}
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-gray-50 p-5">
+              <p className="text-sm font-medium text-gray-500">
+                Most visited provider
+              </p>
+
+              <p className="mt-2 text-xl font-bold text-gray-900">
+                {mostVisitedProvider}
+              </p>
+
+              {mostVisitedProviderCount > 0 && (
+                <p className="mt-1 text-sm text-gray-500">
+                  {mostVisitedProviderCount}{" "}
+                  {mostVisitedProviderCount === 1
+                    ? "visit"
+                    : "visits"}
+                </p>
+              )}
+            </div>
+
+            <div className="rounded-xl bg-gray-50 p-5">
+              <p className="text-sm font-medium text-gray-500">
+                Most visited pair
+              </p>
+
+              <p className="mt-2 text-xl font-bold text-gray-900">
+                {mostVisitedPair}
+              </p>
+
+              {mostVisitedPairCount > 0 && (
+                <p className="mt-1 text-sm text-gray-500">
+                  {mostVisitedPairCount}{" "}
+                  {mostVisitedPairCount === 1
+                    ? "visit"
+                    : "visits"}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {recentProviderClicks.length === 0 ? (
+            <div className="mt-6 rounded-xl bg-gray-50 p-6 text-center">
+              <p className="text-gray-600">
+                You have not visited any providers yet.
+              </p>
+
+              <Link
+                href="/"
+                className="mt-4 inline-block font-semibold text-blue-600 hover:underline"
+              >
+                Compare providers now
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-6 overflow-x-auto">
+              <table className="w-full min-w-[650px] text-left">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="px-4 py-3 text-sm font-semibold text-gray-600">
+                      Date
+                    </th>
+
+                    <th className="px-4 py-3 text-sm font-semibold text-gray-600">
+                      Provider
+                    </th>
+
+                    <th className="px-4 py-3 text-sm font-semibold text-gray-600">
+                      Currency pair
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {recentProviderClicks.map((click) => (
+                    <tr
+                      key={click.id}
+                      className="border-b border-gray-100 last:border-b-0"
+                    >
+                      <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-600">
+                        {new Date(
+                          click.clicked_at
+                        ).toLocaleString()}
+                      </td>
+
+                      <td className="px-4 py-4 font-semibold text-gray-900">
+                        {click.provider_name}
+                      </td>
+
+                      <td className="whitespace-nowrap px-4 py-4 text-gray-700">
+                        {click.from_currency} →{" "}
+                        {click.to_currency}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
+        <section className="mt-10 rounded-2xl bg-white p-6 shadow-sm">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">
@@ -190,15 +411,19 @@ export default async function DashboardPage() {
                     <th className="px-4 py-3 text-sm font-semibold text-gray-600">
                       Date
                     </th>
+
                     <th className="px-4 py-3 text-sm font-semibold text-gray-600">
                       Amount
                     </th>
+
                     <th className="px-4 py-3 text-sm font-semibold text-gray-600">
                       Pair
                     </th>
+
                     <th className="px-4 py-3 text-sm font-semibold text-gray-600">
                       Best provider
                     </th>
+
                     <th className="px-4 py-3 text-sm font-semibold text-gray-600">
                       Recipient receives
                     </th>
@@ -218,13 +443,12 @@ export default async function DashboardPage() {
                       </td>
 
                       <td className="whitespace-nowrap px-4 py-4 font-medium text-gray-900">
-                        {Number(comparison.amount).toLocaleString(
-                          undefined,
-                          {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          }
-                        )}{" "}
+                        {Number(
+                          comparison.amount
+                        ).toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}{" "}
                         {comparison.from_currency}
                       </td>
 
@@ -234,7 +458,8 @@ export default async function DashboardPage() {
                       </td>
 
                       <td className="whitespace-nowrap px-4 py-4 text-gray-700">
-                        {comparison.best_provider ?? "Not available"}
+                        {comparison.best_provider ??
+                          "Not available"}
                       </td>
 
                       <td className="whitespace-nowrap px-4 py-4 font-semibold text-green-700">
