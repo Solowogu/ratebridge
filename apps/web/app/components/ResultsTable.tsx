@@ -717,11 +717,14 @@ export default function ResultsTable({
 
         <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
           <p className="text-xs leading-5 text-gray-500">
-            Provider rates, fees, ratings, and delivery
-            times shown here are estimates for comparison
-            purposes only. Confirm the final quote on the
-            provider&apos;s website before sending money.
-          </p>
+  LIVE results use current provider-supplied quote
+  data where available. ESTIMATE results are
+  RateBridge comparison estimates and may differ
+  from the provider&apos;s final offer. Rates, fees,
+  and availability can change. Always confirm the
+  final quote on the provider&apos;s website before
+  sending money.
+</p>
         </div>
       </div>
 
