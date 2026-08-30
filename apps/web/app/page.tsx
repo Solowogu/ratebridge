@@ -2,6 +2,7 @@ import Navbar from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import Features from "./components/Features";
 import ExchangeForm from "./components/ExchangeForm";
+import AffiliateDisclosure from "./components/AffiliateDisclosure";
 
 export default function Home() {
   return (
@@ -38,9 +39,11 @@ export default function Home() {
         </section>
             </main>
 
-      <Dashboard />
+            <Dashboard />
 
       <Features />
+
+      <AffiliateDisclosure />
 
       <ExchangeForm />
       
