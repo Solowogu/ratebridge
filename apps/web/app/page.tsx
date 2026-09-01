@@ -28,13 +28,19 @@ export default function Home() {
           </p>
 
           <div className="mt-10 flex gap-4">
-            <button className="rounded-xl bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700">
-              Compare Rates
-            </button>
+            <a
+  href="#compare"
+  className="rounded-xl bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700"
+>
+  Compare Rates
+</a>
 
-            <button className="rounded-xl border border-slate-300 bg-white px-8 py-4 font-semibold hover:bg-slate-100">
-              Learn More
-            </button>
+           <a
+  href="/about"
+  className="rounded-xl border border-slate-300 bg-white px-8 py-4 font-semibold hover:bg-slate-100"
+>
+  Learn More
+</a>
           </div>
         </section>
             </main>
@@ -45,7 +51,9 @@ export default function Home() {
 
       <AffiliateDisclosure />
 
-      <ExchangeForm />
+      <section id="compare" className="scroll-mt-24">
+  <ExchangeForm />
+</section>
       
     </>
   );
