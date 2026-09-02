@@ -561,9 +561,17 @@ export default function ResultsTable({
                             </div>
                           )}
 
-                        <div className="mt-1 whitespace-nowrap text-xs text-gray-500">
-                          Source: {provider.source}
-                        </div>
+                        <div className="mt-1 text-xs text-gray-500">
+  <div className="whitespace-nowrap">
+    Source: {provider.source}
+  </div>
+
+  <div className="mt-1 max-w-[220px] leading-4">
+    {provider.quoteType === "live"
+      ? "Current provider-supplied quote data."
+      : "RateBridge estimate. Confirm the final quote with the provider."}
+  </div>
+</div>
                       </div>
                     </div>
                   </td>
