@@ -10,6 +10,12 @@ export default function Footer() {
 
         <div className="flex flex-wrap gap-4">
           <Link
+  href="/privacy"
+  className="hover:text-blue-600"
+>
+  Privacy Policy
+</Link>
+          <Link
             href="/affiliate-disclosure"
             className="hover:text-blue-600"
           >
