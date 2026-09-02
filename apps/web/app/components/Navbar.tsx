@@ -16,14 +16,21 @@ export default async function Navbar() {
         </Link>
 
         <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
-          <Link
-            href="/"
-            className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 sm:px-4 sm:text-base"
-          >
-            Home
-          </Link>
+         <Link
+  href="/"
+  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 sm:px-4 sm:text-base"
+>
+  Home
+</Link>
 
-          {session?.user && (
+<Link
+  href="/how-we-compare"
+  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 sm:px-4 sm:text-base"
+>
+  How We Compare
+</Link>
+
+{session?.user && (
             <>
               <Link
                 href="/dashboard"
