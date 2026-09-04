@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import BestProviderCard from "./BestProviderCard";
 import ProviderDetailsModal from "./ProviderDetailsModal";
 import type { ProviderQuote } from "../lib/providers";
@@ -516,9 +517,15 @@ export default function ResultsTable({
 
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-semibold text-gray-900">
-                            {provider.name}
-                          </span>
+                         <Link
+  href={`/providers/${provider.name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")}`}
+  className="font-semibold text-gray-900 hover:text-blue-600"
+>
+  {provider.name}
+</Link>
 
                           <span
                             className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
