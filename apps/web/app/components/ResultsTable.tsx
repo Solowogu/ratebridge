@@ -393,7 +393,7 @@ export default function ResultsTable({
         </p>
 
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[1250px] text-left">
+          <table className="w-full min-w-[1100px] text-left">
             <thead className="bg-gray-50 text-sm text-gray-600">
               <tr>
                 <th className="px-6 py-4 text-center font-medium">
@@ -420,13 +420,9 @@ export default function ResultsTable({
                   Recipient receives
                 </th>
 
-                <th className="px-6 py-4 font-medium">
-                  Compared with best
-                </th>
-
-                <th className="px-6 py-4 font-medium">
-                  Action
-                </th>
+              <th className="px-6 py-4 font-medium">
+  Action
+</th>
               </tr>
             </thead>
 
@@ -610,55 +606,8 @@ export default function ResultsTable({
                     {toCurrency}
                   </td>
 
-                  <td className="whitespace-nowrap px-6 py-5">
-                    {provider.quoteType === "live" ? (
-                      bestLiveRecipientAmount !== null &&
-                      provider.recipientReceives ===
-                        bestLiveRecipientAmount ? (
-                        <span className="font-semibold text-blue-700">
-                          Best live value
-                        </span>
-                      ) : (
-                        <span className="text-gray-600">
-                          {bestLiveRecipientAmount !==
-                          null
-                            ? `${(
-                                bestLiveRecipientAmount -
-                                provider.recipientReceives
-                              ).toLocaleString(
-                                undefined,
-                                {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                                }
-                              )} ${toCurrency} less`
-                            : "Live quote"}
-                        </span>
-                      )
-                    ) : bestEstimatedRecipientAmount !==
-                        null &&
-                      provider.recipientReceives ===
-                        bestEstimatedRecipientAmount ? (
-                      <span className="font-semibold text-green-700">
-                        Best estimated value
-                      </span>
-                    ) : (
-                      <span className="font-medium text-red-600">
-                        You get{" "}
-                        {(
-                          bestEstimatedRecipientAmount! -
-                          provider.recipientReceives
-                        ).toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}{" "}
-                        {toCurrency} less
-                      </span>
-                    )}
-                  </td>
-
                   <td className="px-6 py-5">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-stretch gap-2">
                       <button
                         type="button"
                         onClick={() =>
