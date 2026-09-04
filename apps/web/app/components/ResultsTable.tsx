@@ -31,13 +31,12 @@ export default function ResultsTable({
   providerQuotes,
   unavailableProviders,
 }: ResultsTableProps) {
-  const [sortBy, setSortBy] = useState<
-    "bestValue" | "lowestFee" | "highestRating"
-  >("bestValue");
+ const [sortBy, setSortBy] = useState<
+  "bestValue" | "lowestFee"
+>("bestValue");
 
   const [noFeeOnly, setNoFeeOnly] = useState(false);
-  const [highRatingOnly, setHighRatingOnly] = useState(false);
-  const [fastDeliveryOnly, setFastDeliveryOnly] = useState(false);
+   const [fastDeliveryOnly, setFastDeliveryOnly] = useState(false);
   const [favoriteProviders, setFavoriteProviders] =
     useState<string[]>([]);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
@@ -106,10 +105,6 @@ export default function ResultsTable({
         return false;
       }
 
-      if (highRatingOnly && provider.rating < 4.5) {
-        return false;
-      }
-
       if (
         fastDeliveryOnly &&
         !provider.deliveryTime.toLowerCase().includes("minute") &&
@@ -144,11 +139,7 @@ export default function ResultsTable({
         return firstProvider.fee - secondProvider.fee;
       }
 
-      if (sortBy === "highestRating") {
-        return secondProvider.rating - firstProvider.rating;
-      }
-
-      return (
+           return (
         secondProvider.recipientReceives -
         firstProvider.recipientReceives
       );
@@ -310,10 +301,9 @@ export default function ResultsTable({
                 value={sortBy}
                 onChange={(event) =>
                   setSortBy(
-                    event.target.value as
-                      | "bestValue"
-                      | "lowestFee"
-                      | "highestRating"
+                   event.target.value as
+  | "bestValue"
+  | "lowestFee"
                   )
                 }
                 className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-blue-500"
@@ -326,10 +316,7 @@ export default function ResultsTable({
                   Lowest fee
                 </option>
 
-                <option value="highestRating">
-                  Highest rating
-                </option>
-              </select>
+                </select>
             </div>
           </div>
         </div>
@@ -356,21 +343,7 @@ export default function ResultsTable({
                   No fee
                 </label>
 
-                <label className="flex items-center gap-2 text-sm text-gray-700">
-                  <input
-                    type="checkbox"
-                    checked={highRatingOnly}
-                    onChange={(event) =>
-                      setHighRatingOnly(
-                        event.target.checked
-                      )
-                    }
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600"
-                  />
-                  Rating 4.5+
-                </label>
-
-                <label className="flex items-center gap-2 text-sm text-gray-700">
+                 <label className="flex items-center gap-2 text-sm text-gray-700">
                   <input
                     type="checkbox"
                     checked={fastDeliveryOnly}
@@ -404,7 +377,6 @@ export default function ResultsTable({
               type="button"
               onClick={() => {
                 setNoFeeOnly(false);
-                setHighRatingOnly(false);
                 setFastDeliveryOnly(false);
                 setFavoritesOnly(false);
               }}
@@ -430,10 +402,6 @@ export default function ResultsTable({
 
                 <th className="px-6 py-4 font-medium">
                   Provider
-                </th>
-
-                <th className="px-6 py-4 font-medium">
-                  Rating
                 </th>
 
                 <th className="px-6 py-4 font-medium">
@@ -581,15 +549,6 @@ export default function ResultsTable({
 </div>
                       </div>
                     </div>
-                  </td>
-
-                  <td className="whitespace-nowrap px-6 py-5 text-gray-700">
-                    <span
-                      aria-label={`${provider.rating} out of 5 stars`}
-                    >
-                      ⭐{" "}
-                      {provider.rating.toFixed(1)}
-                    </span>
                   </td>
 
                   <td className="whitespace-nowrap px-6 py-5 text-gray-700">
