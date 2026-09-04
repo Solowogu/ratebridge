@@ -85,11 +85,11 @@ export default async function ProviderPage({
           </div>
 
           <div className="rounded-2xl border border-gray-200 p-6">
-            <p className="text-sm text-gray-500">RateBridge rating</p>
-            <p className="mt-2 font-semibold text-gray-900">
-              {provider.rating.toFixed(1)} / 5
-            </p>
-          </div>
+  <p className="text-sm text-gray-500">Minimum transfer</p>
+  <p className="mt-2 font-semibold text-gray-900">
+    {provider.minimumTransfer.toLocaleString()}
+  </p>
+</div>
         </section>
 
         <section className="space-y-4">
