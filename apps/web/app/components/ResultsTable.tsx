@@ -393,7 +393,7 @@ export default function ResultsTable({
         </p>
 
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[1100px] text-left">
+          <table className="w-full min-w-[950px] text-left">
             <thead className="bg-gray-50 text-sm text-gray-600">
               <tr>
                 <th className="px-6 py-4 text-center font-medium">
@@ -420,9 +420,6 @@ export default function ResultsTable({
                   Recipient receives
                 </th>
 
-              <th className="px-6 py-4 font-medium">
-  Action
-</th>
               </tr>
             </thead>
 
@@ -543,6 +540,31 @@ export default function ResultsTable({
       : "RateBridge estimate. Confirm the final quote with the provider."}
   </div>
 </div>
+
+                        <div className="mt-3 flex flex-col items-start gap-2">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setSelectedProvider(provider)
+                            }
+                            className="inline-flex justify-center whitespace-nowrap rounded-lg border border-blue-600 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
+                          >
+                            Details
+                          </button>
+
+                          <a
+                            href={`/api/provider-visit?provider=${encodeURIComponent(
+                              provider.name
+                            )}&from=${encodeURIComponent(
+                              fromCurrency
+                            )}&to=${encodeURIComponent(toCurrency)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex justify-center whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+                          >
+                            Visit
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -606,32 +628,6 @@ export default function ResultsTable({
                     {toCurrency}
                   </td>
 
-                  <td className="px-6 py-5">
-                    <div className="flex flex-col items-stretch gap-2">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setSelectedProvider(provider)
-                        }
-                        className="inline-flex whitespace-nowrap rounded-lg border border-blue-600 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
-                      >
-                        Details
-                      </button>
-
-                      <a
-  href={`/api/provider-visit?provider=${encodeURIComponent(
-    provider.name
-  )}&from=${encodeURIComponent(
-    fromCurrency
-  )}&to=${encodeURIComponent(toCurrency)}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="inline-flex whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
->
-  Visit
-</a>
-                    </div>
-                  </td>
                 </tr>
               ))}
             </tbody>
