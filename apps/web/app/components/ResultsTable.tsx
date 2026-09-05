@@ -387,12 +387,191 @@ export default function ResultsTable({
           </div>
         </div>
 
-        <p className="border-t border-gray-100 px-6 py-3 text-xs text-gray-500 md:hidden">
-          Swipe horizontally to view all comparison
-          details.
-        </p>
+       {/* Mobile provider cards */}
+<div className="space-y-4 border-t border-gray-100 p-4 sm:hidden">
+  {rankedProviders.map((provider) => (
+    <div
+      key={provider.name}
+      className={`rounded-2xl border border-gray-200 p-4 shadow-sm ${
+        provider.recipientReceives === bestRecipientAmount
+          ? "bg-green-50/60"
+          : "bg-white"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+              badgeClasses[provider.badgeColor]
+            }`}
+          >
+            {provider.initials}
+          </div>
 
-        <div className="overflow-x-auto">
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                href={`/providers/${provider.name
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, "-")
+                  .replace(/^-|-$/g, "")}`}
+                className="font-semibold text-gray-900 hover:text-blue-600"
+              >
+                {provider.name}
+              </Link>
+
+              <span
+                className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                  provider.quoteType === "live"
+                    ? "bg-blue-100 text-blue-700"
+                    : "bg-gray-100 text-gray-600"
+                }`}
+              >
+                {provider.quoteType === "live"
+                  ? "LIVE"
+                  : "ESTIMATE"}
+              </span>
+            </div>
+
+            {provider.quoteType === "live" &&
+              bestLiveRecipientAmount !== null &&
+              provider.recipientReceives ===
+                bestLiveRecipientAmount && (
+                <div className="mt-2">
+                  <span className="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-700">
+                    Best live quote
+                  </span>
+                </div>
+              )}
+
+            {provider.quoteType === "estimated" &&
+              bestEstimatedRecipientAmount !== null &&
+              provider.recipientReceives ===
+                bestEstimatedRecipientAmount && (
+                <div className="mt-2">
+                  <span className="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
+                    Highest estimated value
+                  </span>
+                </div>
+              )}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            setFavoriteProviders((current) =>
+              current.includes(provider.name)
+                ? current.filter(
+                    (name) => name !== provider.name
+                  )
+                : [...current, provider.name]
+            );
+          }}
+          className="text-2xl transition hover:scale-110"
+        >
+          {favoriteProviders.includes(provider.name)
+            ? "⭐"
+            : "☆"}
+        </button>
+      </div>
+
+      <div className="mt-4 rounded-xl bg-gray-50 p-3">
+        <div className="text-xs font-medium uppercase tracking-wide text-gray-500">
+          Recipient receives
+        </div>
+
+        <div className="mt-1 text-xl font-bold text-green-700">
+          {provider.recipientReceives.toLocaleString(
+            undefined,
+            {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }
+          )}{" "}
+          {toCurrency}
+        </div>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <div className="text-xs text-gray-500">
+            Exchange rate
+          </div>
+
+          <div className="mt-1 font-medium text-gray-800">
+            1 {fromCurrency} ={" "}
+            {provider.rate.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 4,
+            })}{" "}
+            {toCurrency}
+          </div>
+        </div>
+
+        <div>
+          <div className="text-xs text-gray-500">
+            Fee
+          </div>
+
+          <div className="mt-1 font-medium text-gray-800">
+            {provider.fee === 0
+              ? "No fee"
+              : `${provider.fee.toFixed(
+                  2
+                )} ${fromCurrency}`}
+          </div>
+        </div>
+
+        <div className="col-span-2">
+          <div className="text-xs text-gray-500">
+            Delivery time
+          </div>
+
+          <div className="mt-1 font-medium text-gray-800">
+            {provider.deliveryTime}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-500">
+        <div>Source: {provider.source}</div>
+
+        <div className="mt-1 leading-4">
+          {provider.quoteType === "live"
+            ? "Current provider-supplied quote data."
+            : "RateBridge estimate. Confirm the final quote with the provider."}
+        </div>
+      </div>
+
+      <div className="mt-4 flex gap-3">
+        <button
+          type="button"
+          onClick={() => setSelectedProvider(provider)}
+          className="flex-1 rounded-lg border border-blue-600 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
+        >
+          Details
+        </button>
+
+        <a
+          href={`/api/provider-visit?provider=${encodeURIComponent(
+            provider.name
+          )}&from=${encodeURIComponent(
+            fromCurrency
+          )}&to=${encodeURIComponent(toCurrency)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
+        >
+          Visit
+        </a>
+      </div>
+    </div>
+  ))}
+</div>
+
+{/* Desktop comparison table */}
+<div className="hidden overflow-x-auto sm:block">
           <table className="w-full min-w-[950px] text-left">
             <thead className="bg-gray-50 text-sm text-gray-600">
               <tr>
