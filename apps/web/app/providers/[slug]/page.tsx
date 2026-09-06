@@ -105,9 +105,9 @@ export default async function ProviderPage({
           </div>
 
           <div className="rounded-2xl border border-gray-200 p-6">
-  <p className="text-sm text-gray-500">Minimum transfer</p>
+  <p className="text-sm text-gray-500">Transfer limits</p>
   <p className="mt-2 font-semibold text-gray-900">
-    {provider.minimumTransfer.toLocaleString()}
+    Varies by route and payment method
   </p>
 </div>
         </section>
@@ -158,18 +158,16 @@ export default async function ProviderPage({
           </div>
         </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-gray-900">
-            Transfer limits
-          </h2>
+       <section className="space-y-4">
+  <h2 className="text-2xl font-semibold text-gray-900">
+    Transfer limits
+  </h2>
 
           <p className="leading-7 text-gray-600">
-            RateBridge currently lists a minimum transfer of{" "}
-            <strong>{provider.minimumTransfer.toLocaleString()}</strong> and a
-            maximum transfer of{" "}
-            <strong>{provider.maximumTransfer.toLocaleString()}</strong>.
-            Actual limits may vary by currency, destination, payment method,
-            account status, and provider requirements.
+            Transfer limits can vary by currency, destination, payment method,
+            account status, and provider requirements. Always confirm the
+            applicable minimum and maximum directly with the provider before
+            sending money.
           </p>
         </section>
 
