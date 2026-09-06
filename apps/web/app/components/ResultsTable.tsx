@@ -411,14 +411,16 @@ export default function ResultsTable({
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <Link
-                href={`/providers/${provider.name
-                  .toLowerCase()
-                  .replace(/[^a-z0-9]+/g, "-")
-                  .replace(/^-|-$/g, "")}`}
-                className="font-semibold text-gray-900 hover:text-blue-600"
-              >
-                {provider.name}
-              </Link>
+  href={`/providers/${provider.name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")}?from=${encodeURIComponent(
+    fromCurrency
+  )}&to=${encodeURIComponent(toCurrency)}`}
+  className="font-semibold text-gray-900 hover:text-blue-600"
+>
+  {provider.name}
+</Link>
 
               <span
                 className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
@@ -661,7 +663,9 @@ export default function ResultsTable({
   href={`/providers/${provider.name
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")}`}
+    .replace(/^-|-$/g, "")}?from=${encodeURIComponent(
+    fromCurrency
+  )}&to=${encodeURIComponent(toCurrency)}`}
   className="font-semibold text-gray-900 hover:text-blue-600"
 >
   {provider.name}

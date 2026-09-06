@@ -20,6 +20,10 @@ type ProviderPageProps = {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<{
+    from?: string;
+    to?: string;
+  }>;
 };
 export async function generateMetadata({
   params,
@@ -43,8 +47,10 @@ export async function generateMetadata({
 }
 export default async function ProviderPage({
   params,
+  searchParams,
 }: ProviderPageProps) {
   const { slug } = await params;
+  const { from, to } = await searchParams;
 
   const provider = providers.find(
     (item) => createSlug(item.name) === slug
@@ -53,7 +59,21 @@ export default async function ProviderPage({
   if (!provider) {
     notFound();
   }
+const normalizedFrom = from?.trim().toUpperCase() || "";
+const normalizedTo = to?.trim().toUpperCase() || "";
 
+const hasValidCurrencyPair =
+  normalizedFrom &&
+  normalizedTo &&
+  normalizedFrom !== normalizedTo;
+
+const visitUrl = hasValidCurrencyPair
+  ? `/api/provider-visit?provider=${encodeURIComponent(
+      provider.name
+    )}&from=${encodeURIComponent(
+      normalizedFrom
+    )}&to=${encodeURIComponent(normalizedTo)}`
+  : provider.website;
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
       <div className="space-y-10">
@@ -186,7 +206,7 @@ export default async function ProviderPage({
 
         <div>
           <a
-            href={provider.website}
+            href={visitUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700"
