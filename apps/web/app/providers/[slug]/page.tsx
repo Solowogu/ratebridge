@@ -21,7 +21,26 @@ type ProviderPageProps = {
     slug: string;
   }>;
 };
+export async function generateMetadata({
+  params,
+}: ProviderPageProps): Promise<Metadata> {
+  const { slug } = await params;
 
+  const provider = providers.find(
+    (item) => createSlug(item.name) === slug
+  );
+
+  if (!provider) {
+    return {
+      title: "Provider Not Found | RateBridge",
+    };
+  }
+
+  return {
+    title: `${provider.name} Money Transfer Overview | RateBridge`,
+    description: `Compare ${provider.name} transfer options, delivery times, supported destinations, payout methods, and transfer limits on RateBridge.`,
+  };
+}
 export default async function ProviderPage({
   params,
 }: ProviderPageProps) {
