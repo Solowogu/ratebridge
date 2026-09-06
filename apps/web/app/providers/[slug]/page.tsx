@@ -95,9 +95,15 @@ const visitUrl = hasValidCurrencyPair
                 {provider.name}
               </h1>
 
-              <p className="mt-1 text-gray-600">
-                Money transfer provider overview
-              </p>
+            <p className="mt-1 text-gray-600">
+  Money transfer provider overview
+  {hasValidCurrencyPair && (
+    <>
+      {" "}
+      · {normalizedFrom} → {normalizedTo}
+    </>
+  )}
+</p>
             </div>
           </div>
         </header>
