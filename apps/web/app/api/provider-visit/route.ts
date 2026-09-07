@@ -58,17 +58,19 @@ export async function GET(request: NextRequest) {
 
     await sql`
       INSERT INTO provider_clicks (
-        user_id,
-        provider_name,
-        from_currency,
-        to_currency
-      )
-      VALUES (
-        ${session?.user?.id ?? null},
-        ${provider.name},
-        ${fromCurrency},
-        ${toCurrency}
-      );
+  user_id,
+  provider_name,
+  from_currency,
+  to_currency,
+  event_type
+)
+VALUES (
+  ${session?.user?.id ?? null},
+  ${provider.name},
+  ${fromCurrency},
+  ${toCurrency},
+  'outbound_visit'
+);
     `;
 
     const destination =

@@ -41,17 +41,19 @@ export async function POST(request: NextRequest) {
 
     await sql`
       INSERT INTO provider_clicks (
-        user_id,
-        provider_name,
-        from_currency,
-        to_currency
-      )
-      VALUES (
-        ${session?.user?.id ?? null},
-        ${normalizedProviderName},
-        ${normalizedFrom},
-        ${normalizedTo}
-      );
+  user_id,
+  provider_name,
+  from_currency,
+  to_currency,
+  event_type
+)
+VALUES (
+  ${session?.user?.id ?? null},
+  ${normalizedProviderName},
+  ${normalizedFrom},
+  ${normalizedTo},
+  'provider_detail'
+);
     `;
 
     return NextResponse.json({
