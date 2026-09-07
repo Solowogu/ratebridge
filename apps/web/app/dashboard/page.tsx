@@ -386,7 +386,9 @@ export default async function DashboardPage() {
                       <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-600">
                         {new Date(
                           click.clicked_at
-                        ).toLocaleString()}
+                        ).toLocaleString("en-CA", {
+                          timeZone: "America/Toronto",
+                        })}
                       </td>
 
                       <td className="px-4 py-4 font-semibold text-gray-900">
@@ -474,7 +476,9 @@ export default async function DashboardPage() {
                       <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-600">
                         {new Date(
                           comparison.created_at
-                        ).toLocaleString()}
+                        ).toLocaleString("en-CA", {
+                          timeZone: "America/Toronto",
+                        })}
                       </td>
 
                       <td className="whitespace-nowrap px-4 py-4 font-medium text-gray-900">
