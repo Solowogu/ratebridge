@@ -8,7 +8,8 @@ import { sql } from "../lib/db";
 type DashboardSummary = {
   active_alerts: string;
   comparison_count: string;
-  provider_click_count: string;
+  provider_detail_count: string;
+  outbound_visit_count: string;
 };
 
 type RecentComparison = {
@@ -66,7 +67,14 @@ export default async function DashboardPage() {
         SELECT COUNT(*)
         FROM provider_clicks
         WHERE user_id = ${session.user.id}
-      ) AS provider_click_count;
+          AND event_type = 'provider_detail'
+      ) AS provider_detail_count,
+      (
+        SELECT COUNT(*)
+        FROM provider_clicks
+        WHERE user_id = ${session.user.id}
+          AND event_type = 'outbound_visit'
+      ) AS outbound_visit_count;
   `) as DashboardSummary[];
 
   const recentComparisons = (await sql`
@@ -90,6 +98,7 @@ export default async function DashboardPage() {
       COUNT(*) AS click_count
     FROM provider_clicks
     WHERE user_id = ${session.user.id}
+      AND event_type = 'outbound_visit'
     GROUP BY provider_name
     ORDER BY COUNT(*) DESC, provider_name ASC
     LIMIT 1;
@@ -102,6 +111,7 @@ export default async function DashboardPage() {
       COUNT(*) AS click_count
     FROM provider_clicks
     WHERE user_id = ${session.user.id}
+      AND event_type = 'outbound_visit'
     GROUP BY
       from_currency,
       to_currency
@@ -121,6 +131,7 @@ export default async function DashboardPage() {
       clicked_at
     FROM provider_clicks
     WHERE user_id = ${session.user.id}
+      AND event_type = 'outbound_visit'
     ORDER BY clicked_at DESC
     LIMIT 5;
   `) as RecentProviderClick[];
@@ -133,9 +144,18 @@ export default async function DashboardPage() {
     summaryResult[0]?.comparison_count ?? 0
   );
 
-  const providerClickCount = Number(
-    summaryResult[0]?.provider_click_count ?? 0
+  const providerDetailCount = Number(
+    summaryResult[0]?.provider_detail_count ?? 0
   );
+
+  const outboundVisitCount = Number(
+    summaryResult[0]?.outbound_visit_count ?? 0
+  );
+
+  const providerConversionRate =
+    providerDetailCount > 0
+      ? (outboundVisitCount / providerDetailCount) * 100
+      : 0;
 
   const firstName =
     session.user.name?.trim().split(/\s+/)[0] ?? "User";
@@ -219,7 +239,7 @@ export default async function DashboardPage() {
             </p>
 
             <p className="mt-3 text-4xl font-bold text-purple-600">
-              {providerClickCount}
+              {outboundVisitCount}
             </p>
 
             <p className="mt-5 text-sm text-gray-500">
@@ -260,14 +280,29 @@ export default async function DashboardPage() {
             </p>
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <div className="rounded-xl bg-gray-50 p-5">
               <p className="text-sm font-medium text-gray-500">
                 Total visits
               </p>
 
               <p className="mt-2 text-3xl font-bold text-gray-900">
-                {providerClickCount}
+                {outboundVisitCount}
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-gray-50 p-5">
+              <p className="text-sm font-medium text-gray-500">
+                Detail-to-visit conversion
+              </p>
+
+              <p className="mt-2 text-3xl font-bold text-gray-900">
+                {providerConversionRate.toFixed(1)}%
+              </p>
+
+              <p className="mt-1 text-sm text-gray-500">
+                {providerDetailCount} detail{" "}
+                {providerDetailCount === 1 ? "view" : "views"}
               </p>
             </div>
 
