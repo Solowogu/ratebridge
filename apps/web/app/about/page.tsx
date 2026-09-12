@@ -8,11 +8,11 @@ export default function AboutPage() {
       <main className="min-h-screen bg-gray-50 px-6 py-12">
         <div className="mx-auto max-w-4xl rounded-2xl bg-white p-10 shadow">
           <h1 className="text-4xl font-bold text-gray-900">
-            About RateBridge
+            About PagoSync
           </h1>
 
           <p className="mt-6 text-lg leading-8 text-gray-700">
-            RateBridge is a modern exchange-rate comparison platform
+            PagoSync is a modern exchange-rate comparison platform
             designed to help users find the best value when sending
             money internationally.
           </p>

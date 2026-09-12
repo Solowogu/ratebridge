@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
         const { error } = await resend.emails.send({
           from:
             process.env.RESEND_FROM_EMAIL ||
-            "RateBridge <onboarding@resend.dev>",
+            "PagoSync <onboarding@resend.dev>",
           to: [alert.email],
           subject: `Your ${alert.from_currency} → ${alert.to_currency} rate has ${directionSubject}`,
           html: `
@@ -152,7 +152,7 @@ export async function GET(request: NextRequest) {
               </h1>
 
               <p>
-                Your RateBridge alert for
+                Your PagoSync alert for
                 <strong>${alert.from_currency} → ${alert.to_currency}</strong>
                 has been triggered.
               </p>
@@ -181,7 +181,7 @@ export async function GET(request: NextRequest) {
               </p>
 
               <p>
-                Sign in to RateBridge to compare available providers.
+                Sign in to PagoSync to compare available providers.
               </p>
 
               <p>

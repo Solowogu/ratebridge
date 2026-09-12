@@ -14,7 +14,7 @@ export default async function Navbar() {
             href="/"
             className="text-2xl font-bold text-blue-600"
           >
-            RateBridge
+            PagoSync
           </Link>
 
           <details className="relative">
@@ -106,7 +106,7 @@ export default async function Navbar() {
             href="/"
             className="text-2xl font-bold text-blue-600"
           >
-            RateBridge
+            PagoSync
           </Link>
 
           <div className="flex items-center justify-end gap-2">

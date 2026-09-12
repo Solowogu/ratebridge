@@ -543,7 +543,7 @@ export default function ResultsTable({
         <div className="mt-1 leading-4">
           {provider.quoteType === "live"
             ? "Current provider-supplied quote data."
-            : "RateBridge estimate. Confirm the final quote with the provider."}
+            : "PagoSync estimate. Confirm the final quote with the provider."}
         </div>
       </div>
 
@@ -722,7 +722,7 @@ export default function ResultsTable({
   <div className="mt-1 max-w-[220px] leading-4">
     {provider.quoteType === "live"
       ? "Current provider-supplied quote data."
-      : "RateBridge estimate. Confirm the final quote with the provider."}
+      : "PagoSync estimate. Confirm the final quote with the provider."}
   </div>
 </div>
 
@@ -823,7 +823,7 @@ export default function ResultsTable({
           <p className="text-xs leading-5 text-gray-500">
   LIVE results use current provider-supplied quote
   data where available. ESTIMATE results are
-  RateBridge comparison estimates and may differ
+  PagoSync comparison estimates and may differ
   from the provider&apos;s final offer. Rates, fees,
   and availability can change. Always confirm the
   final quote on the provider&apos;s website before

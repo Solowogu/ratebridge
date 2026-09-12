@@ -36,13 +36,13 @@ export async function generateMetadata({
 
   if (!provider) {
     return {
-      title: "Provider Not Found | RateBridge",
+      title: "Provider Not Found | PagoSync",
     };
   }
 
   return {
-    title: `${provider.name} Money Transfer Overview | RateBridge`,
-    description: `Compare ${provider.name} transfer options, delivery times, supported destinations, payout methods, and transfer limits on RateBridge.`,
+    title: `${provider.name} Money Transfer Overview | PagoSync`,
+    description: `Compare ${provider.name} transfer options, delivery times, supported destinations, payout methods, and transfer limits on PagoSync.`,
   };
 }
 export default async function ProviderPage({

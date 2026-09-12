@@ -3,7 +3,7 @@ export default function Features() {
     <section className="bg-white px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <div className="text-center">
-          <p className="font-semibold text-blue-600">Why RateBridge?</p>
+          <p className="font-semibold text-blue-600">Why PagoSync?</p>
 
           <h2 className="mt-3 text-4xl font-bold text-slate-900">
             Everything you need to make smarter transfers

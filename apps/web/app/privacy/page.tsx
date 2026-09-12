@@ -4,7 +4,7 @@ export default function PrivacyPage() {
       <div className="space-y-10">
         <header>
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
-            RateBridge
+            PagoSync
           </p>
 
           <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900">
@@ -16,8 +16,8 @@ export default function PrivacyPage() {
           </p>
 
           <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
-            RateBridge respects your privacy. This Privacy Policy explains the
-            types of information we may collect when you use RateBridge, how
+            PagoSync respects your privacy. This Privacy Policy explains the
+            types of information we may collect when you use PagoSync, how
             that information may be used, and the choices available to you.
           </p>
         </header>
@@ -28,13 +28,13 @@ export default function PrivacyPage() {
           </h2>
 
           <p className="leading-7 text-gray-600">
-            Depending on how you use RateBridge, we may collect information you
+            Depending on how you use PagoSync, we may collect information you
             provide directly to us, such as your name and email address when you
             create an account or use account-based features.
           </p>
 
           <p className="leading-7 text-gray-600">
-            We may also process information related to your use of RateBridge,
+            We may also process information related to your use of PagoSync,
             including currency pairs you compare, saved preferences, rate
             alerts, comparison history, provider visits, and basic technical
             information associated with use of the website.
@@ -47,7 +47,7 @@ export default function PrivacyPage() {
           </h2>
 
           <p className="leading-7 text-gray-600">
-            We may use information to operate and improve RateBridge, provide
+            We may use information to operate and improve PagoSync, provide
             requested features, maintain user accounts, deliver rate alerts,
             remember preferences, understand how the comparison service is
             used, troubleshoot problems, prevent misuse, and maintain the
@@ -61,9 +61,9 @@ export default function PrivacyPage() {
           </h2>
 
           <p className="leading-7 text-gray-600">
-            RateBridge is an independent comparison platform and does not
+            PagoSync is an independent comparison platform and does not
             process money transfers or hold customer funds. When you choose to
-            visit a money transfer provider, you leave RateBridge and interact
+            visit a money transfer provider, you leave PagoSync and interact
             directly with that provider.
           </p>
 
@@ -82,7 +82,7 @@ export default function PrivacyPage() {
           <p className="leading-7 text-gray-600">
             Some provider links may be affiliate or referral links. If you click
             one of these links and complete a qualifying transaction,
-            RateBridge may receive a commission from the provider or an
+            PagoSync may receive a commission from the provider or an
             affiliate network.
           </p>
 
@@ -98,11 +98,11 @@ export default function PrivacyPage() {
           </h2>
 
           <p className="leading-7 text-gray-600">
-            RateBridge may use third-party service providers to support
+            PagoSync may use third-party service providers to support
             functions such as website hosting, database services,
             authentication, email delivery, analytics, and affiliate tracking.
             These providers may process information as necessary to provide
-            their services to RateBridge.
+            their services to PagoSync.
           </p>
         </section>
 
@@ -112,7 +112,7 @@ export default function PrivacyPage() {
           </h2>
 
           <p className="leading-7 text-gray-600">
-            RateBridge and third-party services used by the website may use
+            PagoSync and third-party services used by the website may use
             cookies or similar technologies for functions such as
             authentication, preferences, security, analytics, and affiliate
             attribution.
@@ -155,7 +155,7 @@ export default function PrivacyPage() {
           </p>
 
           <p className="leading-7 text-gray-600">
-            You may also manage certain information through your RateBridge
+            You may also manage certain information through your PagoSync
             account and browser settings where those options are available.
           </p>
         </section>
@@ -166,7 +166,7 @@ export default function PrivacyPage() {
           </h2>
 
           <p className="leading-7 text-gray-600">
-            RateBridge is not intended for children, and we do not knowingly
+            PagoSync is not intended for children, and we do not knowingly
             seek to collect personal information from children through the
             service.
           </p>
@@ -178,7 +178,7 @@ export default function PrivacyPage() {
           </h2>
 
           <p className="leading-7 text-gray-600">
-            We may update this Privacy Policy as RateBridge develops or as our
+            We may update this Privacy Policy as PagoSync develops or as our
             practices and legal obligations change. The date shown at the top
             of this page indicates when the policy was last updated.
           </p>
@@ -190,9 +190,9 @@ export default function PrivacyPage() {
           </h2>
 
           <p className="mt-3 leading-7 text-gray-600">
-            If you have questions about this Privacy Policy or how RateBridge
+            If you have questions about this Privacy Policy or how PagoSync
             handles personal information, please contact us through the contact
-            information provided on the RateBridge website.
+            information provided on the PagoSync website.
           </p>
         </section>
       </div>

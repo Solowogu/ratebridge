@@ -78,7 +78,7 @@ export default function ProviderDetailsModal({
             >
               {isLive
                 ? "Live provider quote"
-                : "RateBridge estimated quote"}
+                : "PagoSync estimated quote"}
             </p>
 
             <span className="text-xs text-gray-500">
@@ -89,7 +89,7 @@ export default function ProviderDetailsModal({
           <p className="mt-2 text-sm leading-6 text-gray-700">
             {isLive
               ? `This quote was obtained from ${provider.source}. Rates and fees may still change before you complete the transfer.`
-              : `This is an estimate calculated by RateBridge for comparison purposes. It is not a live quote from ${provider.name}, and the provider's final rate, fee, and recipient amount may differ.`}
+              : `This is an estimate calculated by PagoSync for comparison purposes. It is not a live quote from ${provider.name}, and the provider's final rate, fee, and recipient amount may differ.`}
           </p>
 
           <p className="mt-2 text-xs font-medium text-gray-600">

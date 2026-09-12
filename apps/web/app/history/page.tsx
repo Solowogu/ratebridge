@@ -49,7 +49,7 @@ export default async function HistoryPage() {
             </h1>
 
             <p className="mt-2 text-gray-600">
-              Your 50 most recent RateBridge comparisons.
+              Your 50 most recent PagoSync comparisons.
             </p>
           </div>
 

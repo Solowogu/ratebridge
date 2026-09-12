@@ -97,7 +97,7 @@ export default function RateAlertForm({
 
         <p className="mt-2 text-sm text-gray-600">
           The alert will be sent to the email address connected to your
-          RateBridge account.
+          PagoSync account.
         </p>
       </div>
 

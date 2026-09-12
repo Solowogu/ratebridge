@@ -54,7 +54,7 @@ export default function LoginPage() {
           href="/"
           className="text-2xl font-bold text-blue-600"
         >
-          RateBridge
+          PagoSync
         </Link>
 
         <h1 className="mt-8 text-3xl font-bold text-gray-900">

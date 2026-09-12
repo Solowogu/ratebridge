@@ -16,12 +16,12 @@ export async function POST() {
     }
 
     const { data, error } = await resend.emails.send({
-      from: "RateBridge <onboarding@resend.dev>",
+      from: "PagoSync <onboarding@resend.dev>",
       to: ["delivered@resend.dev"],
-      subject: "RateBridge email test",
+      subject: "PagoSync email test",
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-          <h1>RateBridge email is connected</h1>
+          <h1>PagoSync email is connected</h1>
           <p>Your Resend integration is working successfully.</p>
         </div>
       `,

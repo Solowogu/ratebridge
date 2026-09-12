@@ -4,7 +4,7 @@ export default function AffiliateDisclosure() {
       <strong className="font-semibold text-gray-700">
         Affiliate disclosure:
       </strong>{" "}
-      RateBridge may earn a commission when you click a provider link and
+      PagoSync may earn a commission when you click a provider link and
       complete a qualifying transaction. This does not affect the rates,
       fees, or provider information shown in our comparison.
     </div>

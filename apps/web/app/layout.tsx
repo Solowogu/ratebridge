@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RateBridge",
+  title: "PagoSync",
   description: "Compare exchange rates and money transfer providers.",
   other: {
     "impact-site-verification": "a5ba1022-6580-4f00-b848-e2a915314844",

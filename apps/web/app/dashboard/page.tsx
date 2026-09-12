@@ -185,7 +185,7 @@ export default async function DashboardPage() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-10">
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
-            RateBridge dashboard
+            PagoSync dashboard
           </p>
 
           <h1 className="mt-2 text-4xl font-bold text-gray-900">

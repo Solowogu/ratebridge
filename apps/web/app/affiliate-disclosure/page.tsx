@@ -10,19 +10,19 @@ export default function AffiliateDisclosurePage() {
 
         <div className="mt-6 space-y-5 text-gray-700 leading-7">
           <p>
-            RateBridge may participate in affiliate programs with some money
+            PagoSync may participate in affiliate programs with some money
             transfer and financial service providers featured on this website.
           </p>
 
           <p>
-            This means RateBridge may receive compensation when you click certain
+            This means PagoSync may receive compensation when you click certain
             provider links and complete a qualifying transaction. This does not
             increase the price you pay.
           </p>
 
           <p>
             Affiliate relationships do not determine the order in which providers
-            are displayed. RateBridge aims to present comparisons based on factors
+            are displayed. PagoSync aims to present comparisons based on factors
             such as exchange rates, fees, delivery times, estimated recipient
             amounts, and other relevant provider information.
           </p>
@@ -34,7 +34,7 @@ export default function AffiliateDisclosurePage() {
           </p>
 
           <p>
-            RateBridge does not provide financial, investment, tax, or legal
+            PagoSync does not provide financial, investment, tax, or legal
             advice. Information on this website is provided for general comparison
             and informational purposes only.
           </p>
