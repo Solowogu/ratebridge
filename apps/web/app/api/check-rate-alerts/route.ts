@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
 
     const appOrigin =
       process.env.NEXT_PUBLIC_APP_URL ||
-      "https://www.ratebridgefx.com";
+      "https://www.pagosync.com";
 
     const alerts = (await sql`
       SELECT
