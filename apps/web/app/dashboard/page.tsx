@@ -1,4 +1,5 @@
 import CreateAlertForm from "../components/CreateAlertForm";
+import Navbar from "../components/Navbar";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -181,7 +182,10 @@ export default async function DashboardPage() {
   );
 
   return (
-    <main className="min-h-screen bg-gray-50 px-6 py-12">
+    <>
+      <Navbar />
+
+      <main className="min-h-screen bg-gray-50 px-6 py-12">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10">
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
@@ -551,6 +555,7 @@ export default async function DashboardPage() {
           </div>
         </section>
       </div>
-    </main>
+      </main>
+    </>
   );
 }
