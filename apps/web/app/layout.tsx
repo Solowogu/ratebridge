@@ -14,8 +14,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PagoSync",
-  description: "Compare exchange rates and money transfer providers.",
+  metadataBase: new URL("https://www.pagosync.com"),
+  title: {
+    default: "PagoSync | Compare Money Transfer Rates & Fees",
+    template: "%s | PagoSync",
+  },
+  description:
+    "Compare exchange rates, transfer fees, delivery times, and recipient amounts from international money transfer providers.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://www.pagosync.com",
+    siteName: "PagoSync",
+    title: "PagoSync | Compare Money Transfer Rates & Fees",
+    description:
+      "Compare exchange rates, transfer fees, delivery times, and recipient amounts from international money transfer providers.",
+  },
+  twitter: {
+    card: "summary",
+    title: "PagoSync | Compare Money Transfer Rates & Fees",
+    description:
+      "Compare exchange rates, transfer fees, delivery times, and recipient amounts from international money transfer providers.",
+  },
   other: {
     "impact-site-verification": "a5ba1022-6580-4f00-b848-e2a915314844",
   },
