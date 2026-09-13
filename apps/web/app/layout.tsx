@@ -21,9 +21,7 @@ export const metadata: Metadata = {
   },
   description:
     "Compare exchange rates, transfer fees, delivery times, and recipient amounts from international money transfer providers.",
-  alternates: {
-    canonical: "/",
-  },
+ 
   openGraph: {
     type: "website",
     url: "https://www.pagosync.com",

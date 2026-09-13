@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "How We Compare",
+  alternates: {
+    canonical: "/how-we-compare",
+  },
+};
+
 export default function HowWeComparePage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">

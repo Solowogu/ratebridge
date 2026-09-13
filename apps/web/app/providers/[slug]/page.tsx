@@ -34,16 +34,19 @@ export async function generateMetadata({
     (item) => createSlug(item.name) === slug
   );
 
-  if (!provider) {
-    return {
-      title: "Provider Not Found | PagoSync",
-    };
-  }
-
+ if (!provider) {
   return {
-    title: `${provider.name} Money Transfer Overview | PagoSync`,
-    description: `Compare ${provider.name} transfer options, delivery times, supported destinations, payout methods, and transfer limits on PagoSync.`,
+    title: "Provider Not Found",
   };
+}
+
+return {
+  title: `${provider.name} Money Transfer Overview`,
+  description: `Compare ${provider.name} transfer options, delivery times, supported destinations, payout methods, and transfer limits on PagoSync.`,
+  alternates: {
+    canonical: `/providers/${slug}`,
+  },
+};
 }
 export default async function ProviderPage({
   params,

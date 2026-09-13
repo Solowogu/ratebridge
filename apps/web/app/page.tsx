@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import Features from "./components/Features";
 import ExchangeForm from "./components/ExchangeForm";
 import AffiliateDisclosure from "./components/AffiliateDisclosure";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default function Home() {
   return (

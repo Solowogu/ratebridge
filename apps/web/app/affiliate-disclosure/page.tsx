@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Affiliate Disclosure",
+  alternates: {
+    canonical: "/affiliate-disclosure",
+  },
+};
 
 export default function AffiliateDisclosurePage() {
   return (
