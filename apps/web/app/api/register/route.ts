@@ -1,32 +1,58 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "../../lib/db";
 import bcrypt from "bcryptjs";
+import { z } from "zod";
+
+const registerSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Name is required.")
+    .max(100, "Name is too long."),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .email("Enter a valid email address."),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters.")
+    .max(128, "Password is too long."),
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, password } = await request.json();
+    const body = await request.json();
 
-    if (!name || !email || !password) {
+    const parsed = registerSchema.safeParse(body);
+
+    if (!parsed.success) {
       return NextResponse.json(
         {
           success: false,
-          error: "All fields are required.",
+          error:
+            parsed.error.issues[0]?.message ||
+            "Invalid account details.",
         },
         { status: 400 }
       );
     }
 
+    const { name, email, password } = parsed.data;
+
     const existingUser = await sql`
       SELECT id
       FROM users
-      WHERE email = ${email};
+      WHERE email = ${email}
+      LIMIT 1;
     `;
 
     if (existingUser.length > 0) {
       return NextResponse.json(
         {
           success: false,
-          error: "Email already exists.",
+          error:
+            "Unable to create account with these details. Try logging in or use a different email.",
         },
         { status: 409 }
       );
@@ -47,11 +73,33 @@ export async function POST(request: NextRequest) {
       );
     `;
 
-    return NextResponse.json({
-      success: true,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+      },
+      { status: 201 }
+    );
   } catch (error) {
-    console.error(error);
+    console.error("Registration error:", error);
+
+    const databaseError = error as {
+      code?: string;
+      constraint?: string;
+    };
+
+    if (
+      databaseError.code === "23505" ||
+      databaseError.constraint === "users_email_key"
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Unable to create account with these details. Try logging in or use a different email.",
+        },
+        { status: 409 }
+      );
+    }
 
     return NextResponse.json(
       {
