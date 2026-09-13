@@ -88,8 +88,11 @@ export default function HowWeComparePage() {
 
           <p className="leading-7 text-gray-600">
             PagoSync may earn a commission when a user clicks a provider link
-            and completes a qualifying transaction. This does not change the
-            rates, fees or provider information shown in our comparison.
+            and completes a qualifying transaction. Not every provider has an
+            affiliate relationship with PagoSync. Affiliate compensation does
+            not determine whether a provider is included or how results are
+            ranked, and it does not change the rates, fees or provider
+            information shown in our comparison.
           </p>
         </section>
 

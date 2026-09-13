@@ -12,7 +12,7 @@ export default function PrivacyPage() {
           </h1>
 
           <p className="mt-4 text-sm text-gray-500">
-            Last updated: September 2, 2026
+            Last updated: September 12, 2026
           </p>
 
           <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
@@ -87,8 +87,11 @@ export default function PrivacyPage() {
           </p>
 
           <p className="leading-7 text-gray-600">
-            Affiliate relationships do not change the rates, fees or provider
-            information displayed in our comparison.
+            Not every provider displayed on PagoSync has an affiliate
+            relationship with us. Affiliate compensation does not determine
+            whether a provider is included or how providers are ranked, and it
+            does not change the rates, fees or provider information displayed
+            in our comparison.
           </p>
         </section>
 
@@ -191,8 +194,14 @@ export default function PrivacyPage() {
 
           <p className="mt-3 leading-7 text-gray-600">
             If you have questions about this Privacy Policy or how PagoSync
-            handles personal information, please contact us through the contact
-            information provided on the PagoSync website.
+            handles personal information, please contact us at{" "}
+            <a
+              href="mailto:support@pagosync.com"
+              className="font-medium text-blue-600 hover:underline"
+            >
+              support@pagosync.com
+            </a>
+            .
           </p>
         </section>
       </div>

@@ -21,10 +21,12 @@ export default function AffiliateDisclosurePage() {
           </p>
 
           <p>
-            Affiliate relationships do not determine the order in which providers
-            are displayed. PagoSync aims to present comparisons based on factors
-            such as exchange rates, fees, delivery times, estimated recipient
-            amounts, and other relevant provider information.
+            Not every provider featured on PagoSync has an affiliate
+            relationship with us. Affiliate relationships and compensation do
+            not determine whether a provider is included or the order in which
+            providers are displayed. PagoSync aims to present comparisons based
+            on factors such as exchange rates, fees, delivery times, estimated
+            recipient amounts, and other relevant provider information.
           </p>
 
           <p>
