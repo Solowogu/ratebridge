@@ -16,7 +16,7 @@ export async function POST() {
     }
 
     const { data, error } = await resend.emails.send({
-      from: "PagoSync <onboarding@resend.dev>",
+      from: "PagoSync <support@pagosync.com>",
       to: ["delivered@resend.dev"],
       subject: "PagoSync email test",
       html: `

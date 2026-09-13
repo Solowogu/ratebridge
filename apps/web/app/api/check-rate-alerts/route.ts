@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
         const { error } = await resend.emails.send({
           from:
             process.env.RESEND_FROM_EMAIL ||
-            "PagoSync <onboarding@resend.dev>",
+            "PagoSync <support@pagosync.com>",
           to: [alert.email],
           subject: `Your ${alert.from_currency} → ${alert.to_currency} rate has ${directionSubject}`,
           html: `
