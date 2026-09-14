@@ -38,8 +38,15 @@ export const {
       async authorize(credentials) {
         const parsedCredentials = z
           .object({
-            email: z.string().email(),
-            password: z.string().min(8),
+            email: z
+              .string()
+              .trim()
+              .toLowerCase()
+              .email(),
+            password: z
+              .string()
+              .min(8)
+              .max(128),
           })
           .safeParse(credentials);
 
@@ -49,7 +56,7 @@ export const {
 
         const { email, password } = parsedCredentials.data;
 
-        const user = await getUser(email.toLowerCase());
+        const user = await getUser(email);
 
         if (!user) {
           return null;
