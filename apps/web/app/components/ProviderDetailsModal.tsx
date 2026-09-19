@@ -10,11 +10,15 @@ type ProviderWithQuoteDetails = Provider & {
 
 type ProviderDetailsModalProps = {
   provider: ProviderWithQuoteDetails | null;
+  fromCurrency: string;
+  toCurrency: string;
   onClose: () => void;
 };
 
 export default function ProviderDetailsModal({
   provider,
+  fromCurrency,
+  toCurrency,
   onClose,
 }: ProviderDetailsModalProps) {
   if (!provider) return null;
@@ -223,7 +227,11 @@ export default function ProviderDetailsModal({
         </div>
 
         <a
-          href={provider.affiliateUrl || provider.website}
+          href={`/api/provider-visit?provider=${encodeURIComponent(
+            provider.name
+          )}&from=${encodeURIComponent(
+            fromCurrency
+          )}&to=${encodeURIComponent(toCurrency)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-6 block rounded-xl bg-blue-600 px-5 py-3 text-center font-semibold text-white transition hover:bg-blue-700"

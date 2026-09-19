@@ -834,6 +834,8 @@ export default function ResultsTable({
 
       <ProviderDetailsModal
         provider={selectedProvider}
+        fromCurrency={fromCurrency}
+        toCurrency={toCurrency}
         onClose={() =>
           setSelectedProvider(null)
         }
