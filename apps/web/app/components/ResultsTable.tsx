@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import BestProviderCard from "./BestProviderCard";
 import ProviderDetailsModal from "./ProviderDetailsModal";
+import { trackProviderVisit } from "../lib/analytics";
 import type { ProviderQuote } from "../lib/providers";
 import { providers } from "../data/providers";
 
@@ -564,6 +565,13 @@ export default function ResultsTable({
           )}&to=${encodeURIComponent(toCurrency)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() =>
+            trackProviderVisit({
+              providerName: provider.name,
+              fromCurrency,
+              toCurrency,
+            })
+          }
           className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
         >
           Visit
@@ -745,6 +753,13 @@ export default function ResultsTable({
                             )}&to=${encodeURIComponent(toCurrency)}`}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() =>
+                              trackProviderVisit({
+                                providerName: provider.name,
+                                fromCurrency,
+                                toCurrency,
+                              })
+                            }
                             className="inline-flex justify-center whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
                           >
                             Visit

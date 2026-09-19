@@ -1,6 +1,7 @@
 "use client";
 
 import type { Provider } from "../data/providers";
+import { trackProviderVisit } from "../lib/analytics";
 
 type ProviderWithQuoteDetails = Provider & {
   quoteType: "live" | "estimated";
@@ -234,6 +235,13 @@ export default function ProviderDetailsModal({
           )}&to=${encodeURIComponent(toCurrency)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() =>
+            trackProviderVisit({
+              providerName: provider.name,
+              fromCurrency,
+              toCurrency,
+            })
+          }
           className="mt-6 block rounded-xl bg-blue-600 px-5 py-3 text-center font-semibold text-white transition hover:bg-blue-700"
         >
           Visit {provider.name}

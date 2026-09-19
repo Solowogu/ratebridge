@@ -1,3 +1,4 @@
+import ProviderVisitLink from "../../components/ProviderVisitLink";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -214,14 +215,12 @@ const visitUrl = hasValidCurrencyPair
         </section>
 
         <div>
-          <a
+          <ProviderVisitLink
             href={visitUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700"
-          >
-            Visit {provider.name}
-          </a>
+            providerName={provider.name}
+            fromCurrency={normalizedFrom}
+            toCurrency={normalizedTo}
+          />
         </div>
       </div>
     </main>
