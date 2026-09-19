@@ -126,6 +126,18 @@ setUnavailableProviders(
       setSubmittedTo(toCurrency);
       setRateDate(data.date ?? "");
 
+      if (typeof window !== "undefined") {
+        const analyticsWindow = window as typeof window & {
+          gtag?: (...args: unknown[]) => void;
+        };
+
+        analyticsWindow.gtag?.("event", "comparison_completed", {
+          from_currency: fromCurrency,
+          to_currency: toCurrency,
+          comparison_amount: numericAmount,
+        });
+      }
+
     const rankedProviders = providers
   .map((provider) => {
     const providerQuote = liveProviderQuotes.find(
