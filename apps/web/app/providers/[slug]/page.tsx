@@ -83,7 +83,7 @@ const visitUrl = hasValidCurrencyPair
       <div className="space-y-10">
         <header>
           <Link
-            href="/"
+            href="/#compare"
             className="text-sm font-medium text-blue-600 hover:text-blue-700"
           >
             ← Back to comparison
