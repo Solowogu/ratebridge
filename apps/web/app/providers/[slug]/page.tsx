@@ -222,6 +222,48 @@ const visitUrl = hasValidCurrencyPair
             toCurrency={normalizedTo}
           />
         </div>
+
+        <section
+          aria-labelledby="other-providers"
+          className="border-t border-gray-200 pt-8"
+        >
+          <h2
+            id="other-providers"
+            className="text-2xl font-semibold text-gray-900"
+          >
+            Explore other providers
+          </h2>
+
+          <p className="mt-2 text-gray-600">
+            View other money transfer providers available on PagoSync.
+          </p>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {providers
+              .filter((other) => other.name !== provider.name)
+              .map((other) => {
+                const otherSlug = createSlug(other.name);
+                const currencyQuery = hasValidCurrencyPair
+                  ? `?from=${encodeURIComponent(normalizedFrom)}&to=${encodeURIComponent(normalizedTo)}`
+                  : "";
+
+                return (
+                  <Link
+                    key={other.name}
+                    href={`/providers/${otherSlug}${currencyQuery}`}
+                    className="rounded-xl border border-gray-200 p-4 transition hover:border-blue-400 hover:shadow-sm"
+                  >
+                    <span className="font-semibold text-gray-900">
+                      {other.name}
+                    </span>
+                    <p className="mt-1 text-sm text-gray-600">
+                      {other.recommendedFor}
+                    </p>
+                  </Link>
+                );
+              })}
+          </div>
+        </section>
       </div>
     </main>
   );
