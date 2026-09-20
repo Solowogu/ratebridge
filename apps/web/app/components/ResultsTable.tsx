@@ -262,6 +262,15 @@ export default function ResultsTable({
                 Compare Providers
               </h2>
 
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-600">
+                <span className="font-semibold text-blue-700">LIVE</span>
+                {" "}results use current provider-supplied quote data.
+                {" "}
+                <span className="font-semibold text-gray-700">ESTIMATE</span>
+                {" "}results are PagoSync comparison estimates.
+                Confirm the final rate and fee with the provider before sending money.
+              </p>
+
               {rankedProviders.length > 0 && (
                 <p className="mt-1 text-xs text-gray-500">
                   Last updated{" "}
