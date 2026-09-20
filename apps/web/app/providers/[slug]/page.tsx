@@ -201,6 +201,24 @@ const visitUrl = hasValidCurrencyPair
           </p>
         </section>
 
+        <section className="rounded-2xl border border-blue-100 bg-blue-50 p-6">
+          <h2 className="text-xl font-semibold text-gray-900">
+            How PagoSync compares providers
+          </h2>
+
+          <p className="mt-3 leading-7 text-gray-600">
+            Learn how PagoSync distinguishes live quotes from estimates,
+            calculates recipient amounts and presents comparison results.
+          </p>
+
+          <Link
+            href="/how-we-compare"
+            className="mt-4 inline-block font-semibold text-blue-600 hover:text-blue-700"
+          >
+            Read our comparison methodology →
+          </Link>
+        </section>
+
         <section className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
           <h2 className="text-xl font-semibold text-gray-900">
             Important information
