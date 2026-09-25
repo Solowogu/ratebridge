@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { auth } from "../../auth";
 import LogoutButton from "./LogoutButton";
 
@@ -10,12 +11,16 @@ export default async function Navbar() {
       <div className="mx-auto max-w-6xl px-6 py-4">
         {/* Mobile navbar */}
         <div className="flex items-center justify-between sm:hidden">
-          <Link
-            href="/"
-            className="text-2xl font-bold text-blue-600"
-          >
-            PagoSync
-          </Link>
+          <Link href="/" className="flex shrink-0 items-center">
+  <Image
+    src="/pagosync-logo.png"
+    alt="PagoSync"
+    width={180}
+    height={60}
+    className="h-auto w-36"
+    priority
+  />
+</Link>
 
           <details className="relative">
             <summary className="cursor-pointer list-none rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 [&::-webkit-details-marker]:hidden">
@@ -102,12 +107,16 @@ export default async function Navbar() {
 
         {/* Desktop navbar */}
         <div className="hidden items-center justify-between sm:flex">
-          <Link
-            href="/"
-            className="text-2xl font-bold text-blue-600"
-          >
-            PagoSync
-          </Link>
+          <Link href="/" className="flex shrink-0 items-center">
+  <Image
+    src="/pagosync-logo.png"
+    alt="PagoSync"
+    width={360}
+    height={120}
+    className="h-auto w-64 lg:w-72"
+    priority
+  />
+</Link>
 
           <div className="flex items-center justify-end gap-2">
             <Link
