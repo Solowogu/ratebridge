@@ -8,6 +8,16 @@ import { trackProviderVisit } from "../lib/analytics";
 import type { ProviderQuote } from "../lib/providers";
 import { providers } from "../data/providers";
 
+declare global {
+  interface Window {
+    gtag: (
+      command: "event",
+      eventName: string,
+      parameters?: Record<string, unknown>
+    ) => void;
+  }
+}
+
 type ResultsTableProps = {
   fromCurrency: string;
   toCurrency: string;
@@ -203,6 +213,16 @@ export default function ResultsTable({
       : 0;
 
   function trackProviderClick(providerName: string) {
+  // Track the click in GA4.
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+    window.gtag("event", "provider_click", {
+      provider_name: providerName,
+      from_currency: fromCurrency,
+      to_currency: toCurrency,
+    });
+  }
+
+  // Track the click in our database.
   void fetch("/api/provider-clicks", {
     method: "POST",
     headers: {
@@ -226,13 +246,9 @@ export default function ResultsTable({
       }
     })
     .catch((error) => {
-      console.error(
-        "Unable to record provider click:",
-        error
-      );
+      console.error("Unable to record provider click:", error);
     });
 }
-
   return (
     <>
       {bestProvider && (
