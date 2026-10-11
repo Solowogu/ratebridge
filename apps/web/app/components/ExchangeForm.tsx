@@ -139,6 +139,10 @@ setUnavailableProviders(
       }
 
     const rankedProviders = providers
+  .filter(
+    (provider) =>
+      !["ACE Money Transfer", "Africhange"].includes(provider.name)
+  )
   .map((provider) => {
     const providerQuote = liveProviderQuotes.find(
       (quote) => quote.provider === provider.name
