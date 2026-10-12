@@ -116,16 +116,29 @@ export async function getWiseQuote(
     );
   }
 
-  const fee =
-    preferredOption.fee?.total ??
-    preferredOption.price?.total?.value?.amount ??
-    0;
+ const fee =
+  preferredOption.fee?.total ??
+  preferredOption.price?.total?.value?.amount;
 
-  const recipientReceives =
-    typeof preferredOption.targetAmount === "number"
-      ? preferredOption.targetAmount
-      : Math.max(amount - fee, 0) * quote.rate;
+if (
+  typeof fee !== "number" ||
+  !Number.isFinite(fee) ||
+  fee < 0
+) {
+  throw new Error("Wise returned an invalid transfer fee.");
+}
 
+  const recipientReceives = preferredOption.targetAmount;
+
+if (
+  typeof recipientReceives !== "number" ||
+  !Number.isFinite(recipientReceives) ||
+  recipientReceives <= 0
+) {
+  throw new Error(
+    "Wise returned an invalid recipient amount."
+  );
+}
   let deliveryTime =
     "Check Wise for delivery estimate";
 
