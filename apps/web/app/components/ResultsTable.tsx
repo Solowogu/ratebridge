@@ -182,19 +182,26 @@ export default function ResultsTable({
         )
       : null;
 
-  const bestRecipientAmount =
-    rankedProviders.length > 0
-      ? Math.max(
-          ...rankedProviders.map(
-            (provider) => provider.recipientReceives
-          )
-        )
-      : 0;
+  // Prefer verified live quotes for the Best Provider card.
+// Use estimates only when no live quotes are available.
+const recommendationPool =
+  liveProviders.length > 0
+    ? liveProviders
+    : estimatedProviders;
 
-  const bestProvider = rankedProviders.find(
-    (provider) =>
-      provider.recipientReceives === bestRecipientAmount
-  );
+const bestRecipientAmount =
+  recommendationPool.length > 0
+    ? Math.max(
+        ...recommendationPool.map(
+          (provider) => provider.recipientReceives
+        )
+      )
+    : 0;
+
+const bestProvider = recommendationPool.find(
+  (provider) =>
+    provider.recipientReceives === bestRecipientAmount
+);
 
   const comparableProviders = bestProvider
     ? rankedProviders.filter(
