@@ -138,40 +138,30 @@ setUnavailableProviders(
         });
       }
 
-    const rankedProviders = providers
-  .filter(
-    (provider) =>
-      !["ACE Money Transfer", "Africhange"].includes(provider.name)
-  )
-  .map((provider) => {
-    const providerQuote = liveProviderQuotes.find(
-      (quote) => quote.provider === provider.name
-    );
+    // Use the same provider quotes as the comparison table.
+// Prioritize verified live quotes over estimates.
+const availableQuotes = liveProviderQuotes.filter(
+  (quote) =>
+    providers.some(
+      (provider) => provider.name === quote.provider
+    )
+);
 
-    const rate =
-      providerQuote?.rate ??
-      data.rate! * provider.rateMultiplier;
+const liveQuotes = availableQuotes.filter(
+  (quote) => quote.quoteType === "live"
+);
 
-    const fee =
-      providerQuote?.fee ??
-      provider.fee;
+const estimatedQuotes = availableQuotes.filter(
+  (quote) => quote.quoteType === "estimated"
+);
 
-    const recipientReceives =
-      providerQuote?.recipientReceives ??
-      Math.max(numericAmount - fee, 0) * rate;
+const recommendationPool =
+  liveQuotes.length > 0 ? liveQuotes : estimatedQuotes;
 
-    return {
-      name: provider.name,
-      recipientReceives,
-    };
-  })
-  .sort(
-    (firstProvider, secondProvider) =>
-      secondProvider.recipientReceives -
-      firstProvider.recipientReceives
-  );
-
-const bestProvider = rankedProviders[0];
+const bestProvider = [...recommendationPool].sort(
+  (first, second) =>
+    second.recipientReceives - first.recipientReceives
+)[0];
       if (bestProvider) {
         try {
           const saveResponse = await fetch("/api/comparisons", {
@@ -184,7 +174,7 @@ const bestProvider = rankedProviders[0];
               fromCurrency,
               toCurrency,
               referenceRate: data.rate,
-              bestProvider: bestProvider.name,
+              bestProvider: bestProvider.provider,
               bestRecipientAmount: bestProvider.recipientReceives,
             }),
           });
