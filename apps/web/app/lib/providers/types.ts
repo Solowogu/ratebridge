@@ -3,7 +3,8 @@ export type ProviderQuote = {
   rate: number;
   fee: number;
   recipientReceives: number;
-  deliveryTime: string;
+   deliveryTime: string;
+  paymentMethod?: string;
   isLive: boolean;
   quoteType: "live" | "estimated";
   updatedAt: string;

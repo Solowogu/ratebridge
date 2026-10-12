@@ -170,7 +170,13 @@ if (
     rate: quote.rate,
     fee,
     recipientReceives,
-    deliveryTime,
+        deliveryTime,
+    paymentMethod:
+      preferredOption.payIn === "BANK_TRANSFER"
+        ? "Bank Transfer"
+        : preferredOption.payIn === "INTERAC"
+          ? "Interac"
+          : preferredOption.payIn ?? "Unknown",
     isLive: true,
     quoteType: "live",
     updatedAt:

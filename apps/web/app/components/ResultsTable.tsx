@@ -57,7 +57,8 @@ export default function ResultsTable({
     fee: number;
     recipientReceives: number;
     deliveryTime: string;
-    isLive: boolean;
+paymentMethod?: string;
+isLive: boolean;
     quoteType: "live" | "estimated";
     updatedAt: string;
     source: string;
@@ -99,7 +100,8 @@ export default function ResultsTable({
         fee: providerQuote.fee,
         recipientReceives: providerQuote.recipientReceives,
         deliveryTime: providerQuote.deliveryTime,
-        isLive: providerQuote.isLive,
+paymentMethod: providerQuote.paymentMethod,
+isLive: providerQuote.isLive,
         quoteType: providerQuote.quoteType,
         updatedAt: providerQuote.updatedAt,
         source: providerQuote.source,
@@ -560,16 +562,21 @@ const bestProvider = recommendationPool.find(
         </div>
 
         <div className="col-span-2">
-          <div className="text-xs text-gray-500">
-            Delivery time
-          </div>
+  <div className="text-xs text-gray-500">
+    Delivery time
+  </div>
 
-          <div className="mt-1 font-medium text-gray-800">
-            {provider.deliveryTime}
-          </div>
-        </div>
-      </div>
+  <div className="mt-1 font-medium text-gray-800">
+    {provider.deliveryTime}
+  </div>
 
+  {provider.paymentMethod && (
+    <div className="mt-2 text-xs text-gray-600">
+      Payment method: {provider.paymentMethod}
+    </div>
+  )}
+</div>
+</div>
       <div className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-500">
         <div>Source: {provider.source}</div>
 
@@ -823,11 +830,17 @@ const bestProvider = recommendationPool.find(
 
                   <td className="whitespace-nowrap px-6 py-5 text-gray-700">
                     <div>
-                      <div>
-                        {provider.deliveryTime}
-                      </div>
+  <div>
+    {provider.deliveryTime}
+  </div>
 
-                      <div className="mt-1 text-xs text-gray-500">
+  {provider.paymentMethod && (
+    <div className="mt-1 text-xs text-gray-600">
+      Payment method: {provider.paymentMethod}
+    </div>
+  )}
+
+  <div className="mt-1 text-xs text-gray-500">
                         {(() => {
                           const minutesAgo =
                             Math.max(
