@@ -1,5 +1,5 @@
 import { getWiseQuote } from "./wise";
-import { getOFXQuote } from "./ofx";
+// import { getOFXQuote } from "./ofx";
 import { getXEQuote } from "./xe";
 import { getRemitlyQuote } from "./remitly";
 import { getWorldRemitQuote } from "./worldremit";
@@ -21,7 +21,8 @@ type ProviderAdapter = {
 };
 const providerAdapters: ProviderAdapter[] = [
   { name: "Wise", getQuote: getWiseQuote },
-  { name: "OFX", getQuote: getOFXQuote },
+  // OFX temporarily disabled pending production API approval.
+  // { name: "OFX", getQuote: getOFXQuote },
   { name: "XE", getQuote: getXEQuote },
   { name: "Remitly", getQuote: getRemitlyQuote },
   { name: "WorldRemit", getQuote: getWorldRemitQuote },
