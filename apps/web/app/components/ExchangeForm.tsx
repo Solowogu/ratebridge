@@ -192,13 +192,17 @@ const bestProvider = rankedProviders[0];
           const saveData: SaveComparisonResponse =
             await saveResponse.json();
 
-          if (saveResponse.ok && saveData.success) {
-            setSaveMessage("Comparison saved successfully.");
-          } else {
-            setSaveMessage(
-              "Results displayed, but the comparison was not saved."
-            );
-          }
+         if (saveResponse.ok && saveData.success) {
+  setSaveMessage("Comparison saved successfully.");
+} else if (saveResponse.status === 401) {
+  setSaveMessage(
+    "Your comparison is ready. Log in or create an account to save it to your history."
+  );
+} else {
+  setSaveMessage(
+    "Results displayed, but the comparison was not saved."
+  );
+}
         } catch {
           setSaveMessage(
             "Results displayed, but the comparison was not saved."
