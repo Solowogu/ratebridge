@@ -236,11 +236,12 @@ export default function ProviderDetailsModal({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() =>
-            trackProviderVisit({
-              providerName: provider.name,
-              fromCurrency,
-              toCurrency,
-            })
+           trackProviderVisit({
+  providerName: provider.name,
+  fromCurrency,
+  toCurrency,
+  clickLocation: "provider_modal",
+})
           }
           className="mt-6 block rounded-xl bg-blue-600 px-5 py-3 text-center font-semibold text-white transition hover:bg-blue-700"
         >

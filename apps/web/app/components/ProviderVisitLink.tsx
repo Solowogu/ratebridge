@@ -21,11 +21,12 @@ export default function ProviderVisitLink({
       target="_blank"
       rel="noopener noreferrer"
       onClick={() =>
-        trackProviderVisit({
-          providerName,
-          fromCurrency,
-          toCurrency,
-        })
+       trackProviderVisit({
+  providerName,
+  fromCurrency,
+  toCurrency,
+  clickLocation: "provider_page",
+})
       }
       className="inline-flex rounded-lg bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700"
     >

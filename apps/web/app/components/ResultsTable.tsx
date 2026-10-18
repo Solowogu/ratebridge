@@ -605,11 +605,12 @@ const bestProvider = recommendationPool.find(
           target="_blank"
           rel="noopener noreferrer"
           onClick={() =>
-            trackProviderVisit({
-              providerName: provider.name,
-              fromCurrency,
-              toCurrency,
-            })
+           trackProviderVisit({
+  providerName: provider.name,
+  fromCurrency,
+  toCurrency,
+  clickLocation: "comparison_mobile",
+})
           }
           className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
         >
@@ -793,11 +794,12 @@ const bestProvider = recommendationPool.find(
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={() =>
-                              trackProviderVisit({
-                                providerName: provider.name,
-                                fromCurrency,
-                                toCurrency,
-                              })
+                             trackProviderVisit({
+  providerName: provider.name,
+  fromCurrency,
+  toCurrency,
+  clickLocation: "comparison_desktop",
+})
                             }
                             className="inline-flex justify-center whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
                           >
