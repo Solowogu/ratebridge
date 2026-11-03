@@ -12,12 +12,13 @@ function createSlug(name: string) {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const publicPages = [
-    "",
-    "/about",
-    "/affiliate-disclosure",
-    "/how-we-compare",
-    "/privacy",
-  ];
+  "",
+  "/about",
+  "/affiliate-disclosure",
+  "/how-we-compare",
+  "/privacy",
+  "/providers",
+];
 
   const pageEntries = publicPages.map((path) => ({
     url: `${BASE_URL}${path}`,
