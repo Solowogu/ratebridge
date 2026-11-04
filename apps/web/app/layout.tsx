@@ -14,29 +14,32 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.pagosync.com"),
   title: {
-    default: "PagoSync | Compare Money Transfer Rates & Fees",
+    default: "Compare International Money Transfer Rates & Fees | PagoSync",
     template: "%s | PagoSync",
   },
   description:
-    "Compare exchange rates, transfer fees, delivery times, and recipient amounts from international money transfer providers.",
- 
+    "Compare international money transfer exchange rates, fees, delivery times and recipient amounts across providers such as Wise, Remitly and Western Union.",
+
   openGraph: {
     type: "website",
     url: "https://www.pagosync.com",
     siteName: "PagoSync",
-    title: "PagoSync | Compare Money Transfer Rates & Fees",
+    title: "Compare International Money Transfer Rates & Fees | PagoSync",
     description:
-      "Compare exchange rates, transfer fees, delivery times, and recipient amounts from international money transfer providers.",
+      "Compare international money transfer exchange rates, fees, delivery times and recipient amounts across providers such as Wise, Remitly and Western Union.",
   },
+
   twitter: {
     card: "summary",
-    title: "PagoSync | Compare Money Transfer Rates & Fees",
+    title: "Compare International Money Transfer Rates & Fees | PagoSync",
     description:
-      "Compare exchange rates, transfer fees, delivery times, and recipient amounts from international money transfer providers.",
+      "Compare international money transfer exchange rates, fees, delivery times and recipient amounts across providers such as Wise, Remitly and Western Union.",
   },
+
   other: {
     "impact-site-verification": "a5ba1022-6580-4f00-b848-e2a915314844",
   },
