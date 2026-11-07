@@ -56,22 +56,29 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    await sql`
-      INSERT INTO provider_clicks (
-  user_id,
-  provider_name,
-  from_currency,
-  to_currency,
-  event_type
-)
-VALUES (
-  ${session?.user?.id ?? null},
-  ${provider.name},
-  ${fromCurrency},
-  ${toCurrency},
-  'outbound_visit'
-);
-    `;
+    try {
+  await sql`
+    INSERT INTO provider_clicks (
+      user_id,
+      provider_name,
+      from_currency,
+      to_currency,
+      event_type
+    )
+    VALUES (
+      ${session?.user?.id ?? null},
+      ${provider.name},
+      ${fromCurrency},
+      ${toCurrency},
+      'outbound_visit'
+    );
+  `;
+} catch (analyticsError) {
+  console.error(
+    "Unable to record provider visit:",
+    analyticsError
+  );
+}
 
     const destination =
       provider.affiliateUrl?.trim() || provider.website;

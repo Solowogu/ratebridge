@@ -142,6 +142,50 @@ const visitUrl = hasValidCurrencyPair
 </div>
         </section>
 
+{provider.name === "MoneyGram" && (
+  <section className="rounded-2xl border border-gray-200 bg-white p-6">
+    <h2 className="text-2xl font-semibold text-gray-900">
+      Why choose MoneyGram?
+    </h2>
+
+    <p className="mt-3 leading-7 text-gray-600">
+      MoneyGram offers international money transfer services,
+      including cash pickup and bank deposits in supported
+      destinations. It may be useful when recipients need
+      access to cash or prefer alternatives to bank transfers.
+    </p>
+
+    <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <div>
+        <h3 className="font-semibold text-gray-900">
+          Cash pickup
+        </h3>
+        <p className="mt-2 text-sm text-gray-600">
+          Recipients can collect eligible transfers at
+          participating MoneyGram locations.
+        </p>
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-gray-900">
+          Flexible payment options
+        </h3>
+        <p className="mt-2 text-sm text-gray-600">
+          Available payment methods may include bank
+          transfers, debit cards, credit cards, or cash,
+          depending on the sending location.
+        </p>
+      </div>
+    </div>
+
+    <p className="mt-5 text-sm text-gray-500">
+      Transfer availability, fees, exchange rates, and
+      delivery times depend on the sending and receiving
+      countries. Confirm the details with MoneyGram.
+    </p>
+  </section>
+)}
+
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold text-gray-900">
             Transfer methods
@@ -188,18 +232,38 @@ const visitUrl = hasValidCurrencyPair
           </div>
         </section>
 
-       <section className="space-y-4">
+
+<section className="space-y-4">
   <h2 className="text-2xl font-semibold text-gray-900">
     Transfer limits
   </h2>
 
-          <p className="leading-7 text-gray-600">
-            Transfer limits can vary by currency, destination, payment method,
-            account status, and provider requirements. Always confirm the
-            applicable minimum and maximum directly with the provider before
-            sending money.
-          </p>
-        </section>
+  {provider.name === "MoneyGram" ? (
+    <div className="rounded-2xl border border-gray-200 p-6">
+      <p className="leading-7 text-gray-600">
+        MoneyGram transfer limits vary depending on the
+        sending country, destination, payment method,
+        account verification, and local regulations.
+      </p>
+
+      <p className="mt-4 leading-7 text-gray-600">
+        Online transfers and transfers made at physical
+        MoneyGram locations may have different limits.
+        Customers should confirm the applicable minimum
+        and maximum amounts directly with MoneyGram
+        before initiating a transaction.
+      </p>
+    </div>
+  ) : (
+    <p className="leading-7 text-gray-600">
+      Transfer limits can vary by currency, destination,
+      payment method, account status, and provider
+      requirements. Always confirm the applicable minimum
+      and maximum directly with the provider before
+      sending money.
+    </p>
+  )}
+</section>
 
         <section className="rounded-2xl border border-blue-100 bg-blue-50 p-6">
           <h2 className="text-xl font-semibold text-gray-900">
