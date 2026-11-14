@@ -298,7 +298,7 @@ const bestProvider = recommendationPool.find(
 
               {rankedProviders.length > 0 && (
                 <p className="mt-1 text-xs text-gray-500">
-                  Last updated{" "}
+                  Latest quote timestamp{" "}
                   {new Date(
                     Math.max(
                       ...rankedProviders.map(
