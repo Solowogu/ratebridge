@@ -856,9 +856,13 @@ const bestProvider = recommendationPool.find(
                               )
                             );
 
-                          return minutesAgo === 0
-                            ? "Just updated"
-                            : `Updated ${minutesAgo} min ago`;
+                         return provider.quoteType === "estimated"
+  ? minutesAgo === 0
+    ? "Estimate calculated just now"
+    : `Estimate calculated ${minutesAgo} min ago`
+  : minutesAgo === 0
+    ? "Quote timestamp: just now"
+    : `Quote timestamp: ${minutesAgo} min ago`;
                         })()}
                       </div>
                     </div>
