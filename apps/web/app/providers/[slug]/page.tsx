@@ -186,6 +186,54 @@ const visitUrl = hasValidCurrencyPair
   </section>
 )}
 
+{provider.name === "Western Union" && (
+  <section className="rounded-2xl border border-gray-200 bg-white p-6">
+    <h2 className="text-2xl font-semibold text-gray-900">
+      Why choose Western Union?
+    </h2>
+
+    <p className="mt-3 leading-7 text-gray-600">
+      Western Union provides international money transfer
+      services across a wide network of countries and
+      territories. It offers cash pickup and other payout
+      methods in supported locations, making it an option
+      for recipients who prefer flexible ways to receive money.
+    </p>
+
+    <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <div>
+        <h3 className="font-semibold text-gray-900">
+          Cash pickup network
+        </h3>
+        <p className="mt-2 text-sm text-gray-600">
+          Recipients can collect eligible transfers at
+          participating Western Union agent locations,
+          subject to local availability and identification
+          requirements.
+        </p>
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-gray-900">
+          Flexible payment methods
+        </h3>
+        <p className="mt-2 text-sm text-gray-600">
+          Depending on the sending country, customers may
+          be able to pay using bank transfers, debit cards,
+          credit cards, or cash at participating locations.
+        </p>
+      </div>
+    </div>
+
+    <p className="mt-5 text-sm text-gray-500">
+      Exchange rates, fees, transfer limits, payout methods,
+      and delivery times vary by country and transaction.
+      Always confirm the final details directly with
+      Western Union before sending money.
+    </p>
+  </section>
+)}
+
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold text-gray-900">
             Transfer methods
@@ -254,7 +302,31 @@ const visitUrl = hasValidCurrencyPair
         before initiating a transaction.
       </p>
     </div>
+
+  ) : provider.name === "Western Union" ? (
+    <div className="rounded-2xl border border-gray-200 p-6">
+      <p className="leading-7 text-gray-600">
+        Western Union transfer limits vary depending on
+        the sending country, receiving country, payment
+        method, delivery method, and customer verification
+        requirements.
+      </p>
+
+      <p className="mt-4 leading-7 text-gray-600">
+        Online transfers and transactions made at Western
+        Union agent locations may have different minimum
+        and maximum amounts. Additional limits may apply
+        to bank deposits, cash pickup, and mobile wallet
+        transfers.
+      </p>
+
+      <p className="mt-4 text-sm text-gray-500">
+        Always check the applicable transfer limits directly
+        with Western Union before completing a transaction.
+      </p>
+    </div>
   ) : (
+
     <p className="leading-7 text-gray-600">
       Transfer limits can vary by currency, destination,
       payment method, account status, and provider
