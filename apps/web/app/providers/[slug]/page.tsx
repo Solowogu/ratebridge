@@ -280,6 +280,55 @@ const visitUrl = hasValidCurrencyPair
   </section>
 )}
 
+{provider.name === "Remitly" && (
+  <section className="rounded-2xl border border-gray-200 bg-white p-6">
+    <h2 className="text-2xl font-semibold text-gray-900">
+      Why choose Remitly?
+    </h2>
+
+    <p className="mt-4 leading-7 text-gray-600">
+      Remitly offers international money transfers with
+      several delivery options in supported countries.
+      Depending on the destination, recipients may be
+      able to receive money through bank deposits,
+      cash pickup, or mobile wallets.
+    </p>
+
+    <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <div className="rounded-xl border border-gray-200 p-4">
+        <h3 className="font-semibold text-gray-900">
+          Flexible delivery options
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-gray-600">
+          Remitly supports eligible bank deposits, cash
+          pickup, and mobile wallet transfers. Available
+          delivery methods depend on the receiving country,
+          currency, and participating partners.
+        </p>
+      </div>
+
+      <div className="rounded-xl border border-gray-200 p-4">
+        <h3 className="font-semibold text-gray-900">
+          Transfer speed options
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-gray-600">
+          Remitly may offer different transfer speeds
+          depending on the payment method and destination.
+          Fees and estimated arrival times are displayed
+          during the transfer process where applicable.
+        </p>
+      </div>
+    </div>
+
+    <p className="mt-5 text-sm text-gray-500">
+      Exchange rates, fees, transfer limits, delivery
+      options, and processing times vary by transaction.
+      Always confirm the latest details directly with
+      Remitly before sending money.
+    </p>
+  </section>
+)}
+
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold text-gray-900">
             Transfer methods
@@ -395,7 +444,32 @@ const visitUrl = hasValidCurrencyPair
           sending money.
         </p>
       </div>
-    ) : (
+
+      ) : provider.name === "Remitly" ? (
+        <div className="rounded-2xl border border-gray-200 p-6">
+          <p className="leading-7 text-gray-600">
+            Remitly transfer limits vary depending on the
+            sending country, receiving country, currency,
+            payment method, and customer verification status.
+          </p>
+
+          <p className="mt-4 leading-7 text-gray-600">
+            Different limits may apply to bank deposits,
+            cash pickup, and mobile wallet transfers.
+            Additional verification or regulatory requirements
+            may affect the amount a customer can send.
+          </p>
+
+          <p className="mt-4 text-sm text-gray-500">
+            The transfer limits displayed in PagoSync are
+            configured reference values and may not reflect
+            the limits available for a particular transaction.
+            Always confirm the applicable minimum and maximum
+            amounts directly with Remitly before sending money.
+          </p>
+        </div>
+      ) : (
+
 
 
     <p className="leading-7 text-gray-600">
