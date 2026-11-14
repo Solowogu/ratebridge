@@ -234,6 +234,52 @@ const visitUrl = hasValidCurrencyPair
   </section>
 )}
 
+{provider.name === "Wise" && (
+  <section className="rounded-2xl border border-gray-200 bg-white p-6">
+    <h2 className="text-2xl font-semibold text-gray-900">
+      Why choose Wise?
+    </h2>
+
+    <p className="mt-4 leading-7 text-gray-600">
+      Wise offers international money transfers with an emphasis
+      on transparent fees and exchange rates. It generally uses
+      the mid-market exchange rate and displays applicable
+      transfer fees before customers confirm a transaction.
+    </p>
+
+    <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <div className="rounded-xl border border-gray-200 p-4">
+        <h3 className="font-semibold text-gray-900">
+          Transparent pricing
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-gray-600">
+          Wise shows its applicable transfer fees and estimated
+          recipient amount before a transfer is confirmed,
+          helping customers understand the total cost.
+        </p>
+      </div>
+
+      <div className="rounded-xl border border-gray-200 p-4">
+        <h3 className="font-semibold text-gray-900">
+          Bank account transfers
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-gray-600">
+          Wise supports transfers to eligible bank accounts
+          in supported countries and currencies. Available
+          payment and delivery methods depend on the route.
+        </p>
+      </div>
+    </div>
+
+    <p className="mt-5 text-sm text-gray-500">
+      Exchange rates, fees, supported destinations, transfer
+      limits, and delivery times vary by currency and payment
+      method. Always confirm the latest details directly
+      with Wise before sending money.
+    </p>
+  </section>
+)}
+
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold text-gray-900">
             Transfer methods
@@ -325,7 +371,32 @@ const visitUrl = hasValidCurrencyPair
         with Western Union before completing a transaction.
       </p>
     </div>
-  ) : (
+
+    ) : provider.name === "Wise" ? (
+      <div className="rounded-2xl border border-gray-200 p-6">
+        <p className="leading-7 text-gray-600">
+          Wise transfer limits depend on the currencies involved,
+          sending and receiving countries, payment method,
+          and applicable verification requirements.
+        </p>
+
+        <p className="mt-4 leading-7 text-gray-600">
+          Different currency routes may have different minimum
+          and maximum transfer amounts. Limits can also depend
+          on whether a customer pays by bank transfer, debit
+          card, or another supported payment method.
+        </p>
+
+        <p className="mt-4 text-sm text-gray-500">
+          The maximum transfer amount shown in PagoSync is
+          a configured reference value, not a guaranteed
+          limit for every transaction. Always confirm the
+          applicable limits directly with Wise before
+          sending money.
+        </p>
+      </div>
+    ) : (
+
 
     <p className="leading-7 text-gray-600">
       Transfer limits can vary by currency, destination,
