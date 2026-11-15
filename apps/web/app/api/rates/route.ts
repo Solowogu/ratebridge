@@ -118,7 +118,10 @@ export async function GET(request: NextRequest) {
 
         result = {
           rate: fromToUsd.rate * usdToNgn.rate,
-          date: usdToNgn.date,
+          date:
+            fromToUsd.date < usdToNgn.date
+              ? fromToUsd.date
+              : usdToNgn.date,
         };
       }
 
@@ -136,7 +139,10 @@ export async function GET(request: NextRequest) {
 
         result = {
           rate: (1 / usdToNgn.rate) * usdToTarget.rate,
-          date: usdToNgn.date,
+          date:
+            usdToNgn.date < usdToTarget.date
+              ? usdToNgn.date
+              : usdToTarget.date,
         };
       }
 
