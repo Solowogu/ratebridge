@@ -12,6 +12,7 @@ type RateResponse = {
   base?: string;
   target?: string;
   date?: string;
+  source?: string;
   error?: string;
 };
 
@@ -35,9 +36,10 @@ export default function ExchangeForm() {
   const [submittedFrom, setSubmittedFrom] = useState("");
   const [submittedTo, setSubmittedTo] = useState("");
 
-  const [isLoading, setIsLoading] = useState(false);
+   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [rateDate, setRateDate] = useState("");
+  const [rateSource, setRateSource] = useState("");
   const [saveMessage, setSaveMessage] = useState("");
 
   function swapCurrencies() {
@@ -125,6 +127,7 @@ export default function ExchangeForm() {
       setSubmittedFrom(fromCurrency);
       setSubmittedTo(toCurrency);
       setRateDate(data.date ?? "");
+      setRateSource(data.source ?? "");
 
       if (typeof window !== "undefined") {
         const analyticsWindow = window as typeof window & {
@@ -337,8 +340,8 @@ export default function ExchangeForm() {
             <>
               {rateDate && (
                 <div className="mt-4 space-y-1">
-                  <p className="text-sm text-gray-500">
-                    Reference rate date (Frankfurter data): {rateDate}
+                <p className="text-sm text-gray-500">
+                    Reference rate date ({rateSource || "Frankfurter"}): {rateDate}
                   </p>
 
                   {(() => {
