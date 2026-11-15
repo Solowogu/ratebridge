@@ -7,15 +7,22 @@ import ResultsTable from "./ResultsTable";
 import { providers } from "../data/providers";
 import type { ProviderQuote } from "../lib/providers";
 
+type RateComponent = {
+  from: string;
+  to: string;
+  date: string;
+  source: string;
+};
+
 type RateResponse = {
   rate?: number;
   base?: string;
   target?: string;
   date?: string;
   source?: string;
+  components?: RateComponent[];
   error?: string;
 };
-
 
 type SaveComparisonResponse = {
   success: boolean;
@@ -36,10 +43,11 @@ export default function ExchangeForm() {
   const [submittedFrom, setSubmittedFrom] = useState("");
   const [submittedTo, setSubmittedTo] = useState("");
 
-   const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [rateDate, setRateDate] = useState("");
   const [rateSource, setRateSource] = useState("");
+  const [rateComponents, setRateComponents] = useState<RateComponent[]>([]);
   const [saveMessage, setSaveMessage] = useState("");
 
   function swapCurrencies() {
@@ -128,7 +136,7 @@ export default function ExchangeForm() {
       setSubmittedTo(toCurrency);
       setRateDate(data.date ?? "");
       setRateSource(data.source ?? "");
-
+      setRateComponents(data.components ?? []);
       if (typeof window !== "undefined") {
         const analyticsWindow = window as typeof window & {
           gtag?: (...args: unknown[]) => void;
@@ -340,10 +348,26 @@ export default function ExchangeForm() {
             <>
               {rateDate && (
                 <div className="mt-4 space-y-1">
-                <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500">
                     Reference rate date ({rateSource || "Frankfurter"}): {rateDate}
                   </p>
+                  {rateComponents.length > 0 && (
+                    <div className="mt-2 space-y-1">
+                      <p className="text-sm font-medium text-gray-700">
+                        Reference-rate components:
+                      </p>
 
+                      {rateComponents.map((component, index) => (
+                        <p
+                          key={`${component.from}-${component.to}-${index}`}
+                          className="text-sm text-gray-500"
+                        >
+                          {component.from} → {component.to} ({component.source}):{" "}
+                          {component.date}
+                        </p>
+                      ))}
+                    </div>
+                  )}
                   {(() => {
                     const rateDay = Date.parse(`${rateDate}T00:00:00Z`);
                     const today = new Date();

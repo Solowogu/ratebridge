@@ -12,6 +12,13 @@ type RateResult = {
   date: string;
 };
 
+type RateComponent = {
+  from: string;
+  to: string;
+  date: string;
+  source: string;
+};
+
 async function fetchRate(
   from: string,
   to: string,
@@ -103,6 +110,7 @@ export async function GET(request: NextRequest) {
   try {
     let result: RateResult;
     let source = "Frankfurter";
+    const components: RateComponent[] = [];
 
     /*
      * NGN pairs are calculated through USD because the CBN
@@ -111,11 +119,23 @@ export async function GET(request: NextRequest) {
     if (to === "NGN") {
       const usdToNgn = await fetchRate("USD", "NGN", "CBN");
 
+      components.push({
+        from: "USD",
+        to: "NGN",
+        date: usdToNgn.date,
+        source: "Central Bank of Nigeria",
+      });
+
       if (from === "USD") {
         result = usdToNgn;
       } else {
         const fromToUsd = await fetchRate(from, "USD");
-
+        components.push({
+          from,
+          to: "USD",
+          date: fromToUsd.date,
+          source: "Frankfurter",
+        });
         result = {
           rate: fromToUsd.rate * usdToNgn.rate,
           date:
@@ -128,7 +148,12 @@ export async function GET(request: NextRequest) {
       source = "Frankfurter and Central Bank of Nigeria";
     } else if (from === "NGN") {
       const usdToNgn = await fetchRate("USD", "NGN", "CBN");
-
+      components.push({
+        from: "USD",
+        to: "NGN",
+        date: usdToNgn.date,
+        source: "Central Bank of Nigeria",
+      });
       if (to === "USD") {
         result = {
           rate: 1 / usdToNgn.rate,
@@ -136,7 +161,12 @@ export async function GET(request: NextRequest) {
         };
       } else {
         const usdToTarget = await fetchRate("USD", to);
-
+        components.push({
+          from: "USD",
+          to,
+          date: usdToTarget.date,
+          source: "Frankfurter",
+        });
         result = {
           rate: (1 / usdToNgn.rate) * usdToTarget.rate,
           date:
@@ -157,6 +187,7 @@ export async function GET(request: NextRequest) {
       target: to,
       date: result.date,
       source,
+      components,
     });
   } catch (error) {
     return NextResponse.json(
