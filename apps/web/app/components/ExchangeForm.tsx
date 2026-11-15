@@ -28,9 +28,9 @@ export default function ExchangeForm() {
 
   const [liveRate, setLiveRate] = useState<number | null>(null);
   const [providerQuotes, setProviderQuotes] =
-  useState<ProviderQuote[]>([]);
+    useState<ProviderQuote[]>([]);
   const [unavailableProviders, setUnavailableProviders] =
-  useState<string[]>([]);
+    useState<string[]>([]);
   const [submittedAmount, setSubmittedAmount] = useState<number | null>(null);
   const [submittedFrom, setSubmittedFrom] = useState("");
   const [submittedTo, setSubmittedTo] = useState("");
@@ -61,11 +61,11 @@ export default function ExchangeForm() {
     }
 
     setIsLoading(true);
-setError("");
-setSaveMessage("");
-setLiveRate(null);
+    setError("");
+    setSaveMessage("");
+    setLiveRate(null);
 
-let liveProviderQuotes: ProviderQuote[] = [];
+    let liveProviderQuotes: ProviderQuote[] = [];
     try {
       const response = await fetch(
         `/api/rates?from=${encodeURIComponent(
@@ -81,46 +81,46 @@ let liveProviderQuotes: ProviderQuote[] = [];
 
       setLiveRate(data.rate);
       try {
- const providerResponse = await fetch(
-  "/api/provider-quotes",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      fromCurrency,
-      toCurrency,
-      amount: numericAmount,
-    }),
-  }
-);
+        const providerResponse = await fetch(
+          "/api/provider-quotes",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              fromCurrency,
+              toCurrency,
+              amount: numericAmount,
+            }),
+          }
+        );
 
-const providerData = await providerResponse.json();
+        const providerData = await providerResponse.json();
 
-if (
-  providerResponse.ok &&
-  providerData.success &&
-  Array.isArray(providerData.quotes)
-) {
-  liveProviderQuotes = providerData.quotes;
-setProviderQuotes(liveProviderQuotes);
-setUnavailableProviders(
-  Array.isArray(providerData.unavailableProviders)
-    ? providerData.unavailableProviders
-    : []
-);
-} else {
-  liveProviderQuotes = [];
-  setProviderQuotes([]);
-  setUnavailableProviders([]);
-}
+        if (
+          providerResponse.ok &&
+          providerData.success &&
+          Array.isArray(providerData.quotes)
+        ) {
+          liveProviderQuotes = providerData.quotes;
+          setProviderQuotes(liveProviderQuotes);
+          setUnavailableProviders(
+            Array.isArray(providerData.unavailableProviders)
+              ? providerData.unavailableProviders
+              : []
+          );
+        } else {
+          liveProviderQuotes = [];
+          setProviderQuotes([]);
+          setUnavailableProviders([]);
+        }
 
-} catch {
-  liveProviderQuotes = [];
-  setProviderQuotes([]);
-  setUnavailableProviders([]);
-}
+      } catch {
+        liveProviderQuotes = [];
+        setProviderQuotes([]);
+        setUnavailableProviders([]);
+      }
       setSubmittedAmount(numericAmount);
       setSubmittedFrom(fromCurrency);
       setSubmittedTo(toCurrency);
@@ -138,30 +138,30 @@ setUnavailableProviders(
         });
       }
 
-    // Use the same provider quotes as the comparison table.
-// Prioritize verified live quotes over estimates.
-const availableQuotes = liveProviderQuotes.filter(
-  (quote) =>
-    providers.some(
-      (provider) => provider.name === quote.provider
-    )
-);
+      // Use the same provider quotes as the comparison table.
+      // Prioritize verified live quotes over estimates.
+      const availableQuotes = liveProviderQuotes.filter(
+        (quote) =>
+          providers.some(
+            (provider) => provider.name === quote.provider
+          )
+      );
 
-const liveQuotes = availableQuotes.filter(
-  (quote) => quote.quoteType === "live"
-);
+      const liveQuotes = availableQuotes.filter(
+        (quote) => quote.quoteType === "live"
+      );
 
-const estimatedQuotes = availableQuotes.filter(
-  (quote) => quote.quoteType === "estimated"
-);
+      const estimatedQuotes = availableQuotes.filter(
+        (quote) => quote.quoteType === "estimated"
+      );
 
-const recommendationPool =
-  liveQuotes.length > 0 ? liveQuotes : estimatedQuotes;
+      const recommendationPool =
+        liveQuotes.length > 0 ? liveQuotes : estimatedQuotes;
 
-const bestProvider = [...recommendationPool].sort(
-  (first, second) =>
-    second.recipientReceives - first.recipientReceives
-)[0];
+      const bestProvider = [...recommendationPool].sort(
+        (first, second) =>
+          second.recipientReceives - first.recipientReceives
+      )[0];
       if (bestProvider) {
         try {
           const saveResponse = await fetch("/api/comparisons", {
@@ -182,17 +182,17 @@ const bestProvider = [...recommendationPool].sort(
           const saveData: SaveComparisonResponse =
             await saveResponse.json();
 
-         if (saveResponse.ok && saveData.success) {
-  setSaveMessage("Comparison saved successfully.");
-} else if (saveResponse.status === 401) {
-  setSaveMessage(
-    "Your comparison is ready. Log in or create an account to save it to your history."
-  );
-} else {
-  setSaveMessage(
-    "Results displayed, but the comparison was not saved."
-  );
-}
+          if (saveResponse.ok && saveData.success) {
+            setSaveMessage("Comparison saved successfully.");
+          } else if (saveResponse.status === 401) {
+            setSaveMessage(
+              "Your comparison is ready. Log in or create an account to save it to your history."
+            );
+          } else {
+            setSaveMessage(
+              "Results displayed, but the comparison was not saved."
+            );
+          }
         } catch {
           setSaveMessage(
             "Results displayed, but the comparison was not saved."
@@ -222,22 +222,22 @@ const bestProvider = [...recommendationPool].sort(
             Enter an amount and choose the currencies you want to compare.
           </p>
         </div>
-<FavoriteCurrencyPairs
-  currentFrom={fromCurrency}
-  currentTo={toCurrency}
-  onSelectPair={(selectedFrom, selectedTo) => {
-    setFromCurrency(selectedFrom);
-    setToCurrency(selectedTo);
-    setLiveRate(null);
-    setError("");
-    setSaveMessage("");
-  }}
-/>
-       <form
+        <FavoriteCurrencyPairs
+          currentFrom={fromCurrency}
+          currentTo={toCurrency}
+          onSelectPair={(selectedFrom, selectedTo) => {
+            setFromCurrency(selectedFrom);
+            setToCurrency(selectedTo);
+            setLiveRate(null);
+            setError("");
+            setSaveMessage("");
+          }}
+        />
+        <form
           onSubmit={handleSubmit}
           className="mt-8 grid gap-5 md:grid-cols-[1fr_1fr_auto_1fr]"
-      >
-  <div>
+        >
+          <div>
             <label
               htmlFor="amount"
               className="mb-2 block text-sm font-medium text-gray-700"
@@ -278,15 +278,15 @@ const bestProvider = [...recommendationPool].sort(
               <option value="NGN">NGN — Nigerian Naira</option>
             </select>
           </div>
- <div className="flex items-end justify-center">
-   <button
-      type="button"
-      onClick={swapCurrencies}
-      className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-300 bg-white text-xl font-bold text-blue-600 hover:bg-blue-50"
-  >
-    ⇄
-  </button>
-</div>
+          <div className="flex items-end justify-center">
+            <button
+              type="button"
+              onClick={swapCurrencies}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-300 bg-white text-xl font-bold text-blue-600 hover:bg-blue-50"
+            >
+              ⇄
+            </button>
+          </div>
           <div>
             <label
               htmlFor="toCurrency"
@@ -335,22 +335,48 @@ const bestProvider = [...recommendationPool].sort(
           submittedFrom &&
           submittedTo && (
             <>
-               {rateDate && (
-                <p className="mt-4 text-sm text-gray-500">
-                  Reference rate date (Frankfurter data): {rateDate}
-                </p>
+              {rateDate && (
+                <div className="mt-4 space-y-1">
+                  <p className="text-sm text-gray-500">
+                    Reference rate date (Frankfurter data): {rateDate}
+                  </p>
+
+                  {(() => {
+                    const rateDay = Date.parse(`${rateDate}T00:00:00Z`);
+                    const today = new Date();
+                    const todayUtc = Date.UTC(
+                      today.getUTCFullYear(),
+                      today.getUTCMonth(),
+                      today.getUTCDate()
+                    );
+
+                    const ageDays = Math.floor(
+                      (todayUtc - rateDay) / 86400000
+                    );
+
+                    return (
+                      Number.isFinite(ageDays) &&
+                      ageDays > 2 && (
+                        <p className="text-sm text-amber-700">
+                          This reference rate is more than 2 days old.
+                          Provider quotes may use newer rates.
+                        </p>
+                      )
+                    );
+                  })()}
+                </div>
               )}
 
-             <ResultsTable
-  fromCurrency={submittedFrom}
-  toCurrency={submittedTo}
-  providerQuotes={providerQuotes}
-  unavailableProviders={unavailableProviders}
-/>
+              <ResultsTable
+                fromCurrency={submittedFrom}
+                toCurrency={submittedTo}
+                providerQuotes={providerQuotes}
+                unavailableProviders={unavailableProviders}
+              />
               <RateHistoryChart
-  fromCurrency={submittedFrom}
-  toCurrency={submittedTo}
-/>
+                fromCurrency={submittedFrom}
+                toCurrency={submittedTo}
+              />
               <RateAlertForm
                 fromCurrency={submittedFrom}
                 toCurrency={submittedTo}
