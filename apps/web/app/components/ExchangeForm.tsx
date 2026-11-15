@@ -335,9 +335,9 @@ const bestProvider = [...recommendationPool].sort(
           submittedFrom &&
           submittedTo && (
             <>
-              {rateDate && (
+               {rateDate && (
                 <p className="mt-4 text-sm text-gray-500">
-                  Reference rate date: {rateDate}
+                  Reference rate date (Frankfurter data): {rateDate}
                 </p>
               )}
 
